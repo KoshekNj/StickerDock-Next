@@ -1,5 +1,5 @@
 import { useDrop } from "react-dnd";
-import { ItemTypes } from "../../../App";
+import { ItemTypes } from "pages/_app";
 import { IStickerProps } from "../sticker";
 
 interface ICanvasProps {

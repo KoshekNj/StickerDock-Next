@@ -1,5 +1,5 @@
 import { useDrag } from "react-dnd";
-import { ItemTypes } from "../../App";
+import { ItemTypes } from "pages/_app";
 
 export interface IStickerProps {
   path: string;

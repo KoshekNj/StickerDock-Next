@@ -22,7 +22,9 @@ const StickerPack = ({ title, author, tags }: IPackProps) => {
       </div>
       <div className="mt-2 min-w-[165px] flex flex-wrap">
         {tags.map((tag) => (
-          <p className="text-xs w-fit">#{tag}</p>
+          <p className="text-xs w-fit" key={tag}>
+            #{tag}
+          </p>
         ))}
       </div>
     </div>

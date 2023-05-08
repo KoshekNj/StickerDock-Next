@@ -1,9 +1,6 @@
-import Header from "../../Components/Header/header";
-import StickerPack, {
-  IPackProps,
-} from "../../Components/StickerPack/stickerPack";
+import Header from "components/Header/header";
+import StickerPack, { IPackProps } from "components/StickerPack/stickerPack";
 import React from "react";
-import Profile from "../../Images/kermit.png";
 const SingleItem = () => {
   const page = "SingleItem";
   const [comments, setComments] = React.useState([]);
@@ -38,14 +35,14 @@ const SingleItem = () => {
             <div className="flex bg-yellow-100 px-3 py-2 items-center  mb-4">
               <img
                 className="rounded-full w-[40px] h-[40px] mr-4"
-                src={Profile}
+                src="/images/kermit.png"
               ></img>
               <p>Username</p>
             </div>
             <h1 className="text-lg">Comments</h1>
             {comments.length !== 0 ? (
               comments?.map((comment) => (
-                <div>
+                <div key={comment}>
                   <p>{comment}</p>
                 </div>
               ))

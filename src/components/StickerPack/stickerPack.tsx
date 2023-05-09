@@ -2,9 +2,10 @@ export interface IPackProps {
   title: string;
   author: string;
   tags: Array<string>;
+  stickers: Array<any>;
 }
 
-const StickerPack = ({ title, author, tags }: IPackProps) => {
+const StickerPack = ({ title, author, tags, stickers }: IPackProps) => {
   return (
     <div className="relative w-[60%] font-kameron">
       <div className=" h-[395px] w-[165px] flex flex-col relative z-30 bg-orange-100 drop-shadow ">
@@ -12,7 +13,15 @@ const StickerPack = ({ title, author, tags }: IPackProps) => {
           <p className="w-fit text-sm bold">{title}</p>
           <p className="w-fit text-sm">created by: {author}</p>
         </div>
-        <div className=""></div>
+        <div className="flex flex-wrap justify-center items-center">
+          {stickers.map((sticker: any) => (
+            <img
+              className="max-w-[40px] m-3"
+              key={sticker.src}
+              src={sticker.src}
+            ></img>
+          ))}
+        </div>
       </div>
       <div className="h-[395px] w-[165px] bg-orange-100 drop-shadow z-20 m-1 absolute left-0 top-0 flex flex-col">
         <div className="h-[18%] drop-shadow bg-slate-300"></div>

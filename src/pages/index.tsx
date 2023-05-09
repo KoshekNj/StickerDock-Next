@@ -4,6 +4,7 @@ import React from "react";
 import Header from "components/Header/header";
 import StickerPack, { IPackProps } from "components/StickerPack/stickerPack";
 import { useDropzone } from "react-dropzone";
+import stickers from "../../public/stickers/index";
 
 export default function Edit() {
   const page = "Editor";
@@ -24,10 +25,13 @@ export default function Edit() {
     onDragLeave: () => null,
   });
 
+  const Stickers = stickers;
+
   const packValues: IPackProps = {
     title: "Unknown sticker pack",
     author: "User",
-    tags: ["unknown", "notMadeYet", "blank", "europskaUnija"],
+    tags: ["unknown", "notMadeYet", "blank", "VeuropskaUnija"],
+    stickers: Stickers,
   };
   return (
     <div className=" bg-cover min-h-screen flex flex-col bg-fixed bg-background font-kameron pb-10">
@@ -42,6 +46,7 @@ export default function Edit() {
             title={packValues.title}
             author={packValues.author}
             tags={packValues.tags}
+            stickers={packValues.stickers}
           ></StickerPack>
         </div>
         {image ? (

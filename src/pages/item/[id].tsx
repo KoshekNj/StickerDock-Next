@@ -1,13 +1,16 @@
 import Header from "components/Header/header";
 import StickerPack, { IPackProps } from "components/StickerPack/stickerPack";
 import React from "react";
+import stickers from "../../../public/stickers/index";
 const SingleItem = () => {
   const page = "SingleItem";
   const [comments, setComments] = React.useState([]);
+  const Stickers = stickers;
   const packValues: IPackProps = {
     title: "Unknown sticker pack",
     author: "User",
     tags: ["unknown", "notMadeYet", "blank", "europskaUnija"],
+    stickers: Stickers,
   };
   return (
     <div className=" bg-cover bg-fixed bg-background font-kameron pb-10">
@@ -19,6 +22,7 @@ const SingleItem = () => {
             title={packValues.title}
             author={packValues.author}
             tags={packValues.tags}
+            stickers={packValues.stickers}
           ></StickerPack>
         </div>
 

@@ -1,3 +1,5 @@
+import { Sticker } from "components/Sticker/sticker";
+
 export interface IPackProps {
   title: string;
   author: string;
@@ -15,11 +17,7 @@ const StickerPack = ({ title, author, tags, stickers }: IPackProps) => {
         </div>
         <div className="flex flex-wrap justify-center items-center">
           {stickers.map((sticker: any) => (
-            <img
-              className="max-w-[40px] m-3"
-              key={sticker.src}
-              src={sticker.src}
-            ></img>
+            <Sticker key={sticker.src} id={sticker.src} src={sticker.src} />
           ))}
         </div>
       </div>

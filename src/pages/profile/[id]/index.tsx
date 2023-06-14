@@ -3,29 +3,32 @@
 import Header from "components/Header/header";
 import StickerPack, { IPackProps } from "components/StickerPack/stickerPack";
 import React from "react";
-
+import stickers from "../../../../public/stickers/index";
 import Select from "react-select";
 import { queryTypes, useQueryStates } from "next-usequerystate";
 import Link from "next/link";
 
 const Profile = () => {
   const page = "My profile";
-
+  const Stickers = stickers;
   const packValues: IPackProps[] = [
     {
       title: "Unknown sticker pack",
       author: "User",
       tags: ["gdfg"],
+      stickers: Stickers,
     },
     {
       title: "Cute Smiley Pack",
       author: "User",
       tags: ["smiley", "rainbow", "clouds", "sun", "rain"],
+      stickers: Stickers,
     },
     {
       title: "Fantasy Pack",
       author: "User",
       tags: ["fantasy", "unicorn", "castle", "rainbow"],
+      stickers: Stickers,
     },
   ];
 
@@ -176,6 +179,7 @@ const Profile = () => {
                   title={value.title}
                   author={value.author}
                   tags={value.tags}
+                  stickers={value.stickers}
                 />
               ))}
             </div>

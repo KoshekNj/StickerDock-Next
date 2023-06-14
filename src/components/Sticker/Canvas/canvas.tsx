@@ -1,38 +1,45 @@
-import { useDrop } from "react-dnd";
-import { ItemTypes } from "pages/_app";
-import { IStickerProps } from "../sticker";
+import React from "react";
+import { useDroppable } from "@dnd-kit/core";
+import { Sticker } from "../sticker";
+import stickers from "../../../../public/stickers/index";
 
-interface ICanvasProps {
-  // setStickers: (arg0: IStickerProps[] | () => void;
-  setStickers: any;
+export interface IStickerWithPosition {
+  src: string;
+  x: number;
+  y: number;
 }
-export const Canvas = ({ setStickers }: ICanvasProps) => {
-  const [{ isOver }, drop] = useDrop(
-    () => ({
-      accept: ItemTypes.STICKER,
-      drop: (item, monitor) => console.log(item, monitor),
-      collect: (monitor) => ({
-        isOver: !!monitor.isOver(),
-      }),
-    }),
-    []
-  );
+interface ICanvasProps {
+  id: string;
+  children: React.ReactNode;
+  canvasStickers: IStickerWithPosition[];
+}
+export function Canvas(props: ICanvasProps) {
+  const test = useDroppable({
+    id: props.id,
+  });
+  const style = {
+    opacity: test.isOver ? "0.5" : "1",
+  };
 
-  console.log(isOver);
   return (
-    <div
-      onDragOver={(e) => {
-        console.log("dragalica");
-        setStickers((stickers: IStickerProps[]) => [
-          {
-            ...stickers[0],
-            x: e.pageX,
-            y: e.pageY,
-          },
-        ]);
-      }}
-      ref={drop}
-      className="absolute h-screen right-0 w-1/2 border border-red-500"
-    ></div>
+    <div className="relative" id={props.id} ref={test.setNodeRef} style={style}>
+      {props.canvasStickers.map((sticker) => {
+        return (
+          <Sticker
+            src={sticker.src}
+            id={sticker.src}
+            key={sticker.src}
+            style={{
+              position: "absolute",
+              top: sticker.y + "px",
+              left: sticker.x + "px",
+              zIndex: "10",
+            }}
+          />
+        );
+      })}
+
+      {props.children}
+    </div>
   );
-};
+}

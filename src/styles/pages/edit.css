@@ -1,6 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 .edit {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -49,4 +46,4 @@
   content: "";
   padding-top: calc(100% / (16 / 9));
 }
-/*# sourceMappingURL=globals.css.map */
+/*# sourceMappingURL=edit.css.map */

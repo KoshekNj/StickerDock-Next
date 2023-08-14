@@ -12,6 +12,7 @@ const SingleItem = () => {
     tags: ["unknown", "notMadeYet", "blank", "europskaUnija"],
     stickers: Stickers,
   };
+
   return (
     <div className=" bg-cover bg-fixed bg-background font-kameron pb-10">
       <div className="h-[40vh] w-full  absolute bg-gradient-to-b from-myYellow"></div>

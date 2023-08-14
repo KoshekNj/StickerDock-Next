@@ -8,6 +8,7 @@ import stickers from "../../public/stickers/index";
 import { Sticker } from "components/Sticker/sticker";
 import { Canvas, IStickerWithPosition } from "components/Sticker/Canvas/canvas";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import handler from "./api/stickers";
 
 export default function Edit() {
   const page = "Editor";

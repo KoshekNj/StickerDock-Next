@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 const StickerPack = require("../../db/models/stickerPack");
-const sequelize = require("../../db/config");
 
 async function getStickerPacks() {
   try {
@@ -10,6 +9,7 @@ async function getStickerPacks() {
     return err;
   }
 }
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<typeof StickerPack>

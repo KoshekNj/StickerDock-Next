@@ -1,9 +1,8 @@
 const { Sequelize } = require("sequelize");
 const db = require("../config");
-const User = require("./user");
 
-const StickerPack = db.define(
-  "stickerPack",
+const Image = db.define(
+  "image",
   {
     id: {
       type: Sequelize.INTEGER,
@@ -12,11 +11,7 @@ const StickerPack = db.define(
       allowNull: false,
       unique: true,
     },
-    name: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    labelUrl: {
+    imageUrl: {
       type: Sequelize.STRING,
       allowNull: false,
     },
@@ -26,8 +21,4 @@ const StickerPack = db.define(
     timestamps: false,
   }
 );
-
-User.hasMany(StickerPack);
-StickerPack.belongsTo(User);
-
-module.exports = StickerPack;
+module.exports = Image;

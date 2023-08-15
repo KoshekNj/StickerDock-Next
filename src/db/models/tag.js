@@ -1,9 +1,8 @@
 const { Sequelize } = require("sequelize");
 const db = require("../config");
-const User = require("./user");
 
-const StickerPack = db.define(
-  "stickerPack",
+const Tag = db.define(
+  "tag",
   {
     id: {
       type: Sequelize.INTEGER,
@@ -16,18 +15,10 @@ const StickerPack = db.define(
       type: Sequelize.STRING,
       allowNull: false,
     },
-    labelUrl: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
   },
   {
     freezeTableName: true,
     timestamps: false,
   }
 );
-
-User.hasMany(StickerPack);
-StickerPack.belongsTo(User);
-
-module.exports = StickerPack;
+module.exports = Tag;

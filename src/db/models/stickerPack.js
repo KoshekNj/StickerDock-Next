@@ -3,7 +3,7 @@ const db = require("../config");
 const User = require("./user");
 
 const StickerPack = db.define(
-  "stickerPack",
+  "stickerpack",
   {
     id: {
       type: Sequelize.INTEGER,

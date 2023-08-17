@@ -8,6 +8,6 @@ const db = new Sequelize("bla", "root", "Mgmt567", {
   // ssl: true
 });
 
-db.sync({ force: true });
+//db.sync({ force: true });
 
 module.exports = db;

@@ -21,4 +21,5 @@ const Image = db.define(
     timestamps: false,
   }
 );
+
 module.exports = Image;

@@ -1,8 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { createPublishedItem } from "./publishedItem";
 const Image = require("../../db/models/image");
 
-interface iImage {
-  imageId: number;
+export interface iImage {
+  imageUrl: string;
+  userId: number;
+}
+
+export interface iImageFull {
+  id: number;
+  imageUrl: string;
 }
 async function getImages() {
   try {
@@ -27,10 +34,11 @@ async function getImageById(id: number) {
   }
 }
 
-async function createImage(image: iImage) {
+export async function createImage(image: iImage) {
   try {
     const res = await Image.create(image);
-    return res;
+    createPublishedItem(image.userId, res.id);
+    return res.id;
   } catch (error) {
     return error;
   }

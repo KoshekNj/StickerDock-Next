@@ -1,5 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 const PublishedItem = require("../../db/models/publishedItem");
+import { createImage, iImage } from "./image";
+import {
+  createStickerPack,
+  iStickerPack,
+  iStickerPackFull,
+} from "./stickerPack";
 
 interface iPublishedItem {
   userId: number;
@@ -41,9 +47,9 @@ async function getPublishedItemsByUserId(id: number) {
   }
 }
 
-async function createPublishedItem(publishedItem: iPublishedItem) {
+export async function createPublishedItem(userId: number, id: number) {
   try {
-    const res = await PublishedItem.create(publishedItem);
+    const res = await PublishedItem.create(userId, id);
     return res;
   } catch (error) {
     return error;

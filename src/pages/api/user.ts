@@ -18,6 +18,32 @@ async function getUsers() {
   }
 }
 
+async function logInUser(email: string, password: string) {
+  try {
+    const user = await User.findOne({ where: { email: email } });
+    if ((user.password = password)) {
+      return user;
+    } else {
+      return "Not authorized";
+    }
+  } catch (err) {
+    return err;
+  }
+}
+
+async function signUpUser(user: iUser) {
+  try {
+    const existingUser = await User.findOne({ where: { email: user.email } });
+    if (existingUser) {
+      return "User with this email already exists";
+    } else {
+      createUser(user);
+    }
+  } catch (err) {
+    return err;
+  }
+}
+
 async function getUserById(id: number) {
   try {
     const res = await User.findOne({

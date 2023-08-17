@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 const Sticker = require("../../db/models/sticker");
 
-interface iSticker {
-  stikcerPackId: number;
+export interface iSticker {
+  stickerPackId: number;
   imageUrl: string;
 }
 async function getStickers(id: number) {
@@ -28,7 +28,21 @@ async function getStickerById(id: number) {
   }
 }
 
-async function createSticker(sticker: iSticker) {
+export async function getStickerByStickerPackId(id: number) {
+  try {
+    const res = await Sticker.findAll({
+      where: {
+        stickerPackId: id,
+      },
+      raw: true,
+    });
+    return res;
+  } catch (err) {
+    return err;
+  }
+}
+
+export async function createSticker(sticker: iSticker) {
   try {
     const res = await Sticker.create(sticker);
     return res;

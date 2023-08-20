@@ -2,7 +2,7 @@ const db = require("../config");
 const User = require("./user");
 
 const Follower = db.define(
-  "stickerPackTags",
+  "follower",
   {},
   {
     freezeTableName: true,

@@ -1,31 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-const Sticker = require("../../db/models/sticker");
+const Sticker = require("../../../db/models/sticker");
 
 export interface iSticker {
   stickerPackId: number;
   imageUrl: string;
-}
-async function getStickers(id: number) {
-  try {
-    const res = await Sticker.findAll({ where: { stickerPackid: id } });
-    return res;
-  } catch (err) {
-    return err;
-  }
-}
-
-async function getStickerById(id: number) {
-  try {
-    const res = await Sticker.findOne({
-      where: {
-        id: id,
-      },
-      raw: true,
-    });
-    return res;
-  } catch (err) {
-    return err;
-  }
 }
 
 export async function getStickerByStickerPackId(id: number) {
@@ -42,18 +20,9 @@ export async function getStickerByStickerPackId(id: number) {
   }
 }
 
-export async function createSticker(sticker: iSticker) {
-  try {
-    const res = await Sticker.create(sticker);
-    return res;
-  } catch (error) {
-    return error;
-  }
-}
-
 async function deleteStickers(id: number) {
   try {
-    const res = await Sticker.destroy({
+    const res = await Sticker.destroyAll({
       where: {
         stickerPackid: id,
       },
@@ -69,7 +38,15 @@ export default async function handler(
   res: NextApiResponse<typeof Sticker>
 ) {
   try {
-    res.status(200).json("test");
+    if ((req.method = "GET")) {
+      const stickerId = req.query.id;
+      const response = await getStickerByStickerPackId(stickerId as any);
+      return res.status(200).json(response);
+    } else if ((req.method = "DELETE")) {
+      const stickerId = req.query.id;
+      const response = await deleteStickers(stickerId as any);
+      return res.status(200).json(response);
+    }
   } catch (err) {
     res.status(500).json({ error: "failed to load data" });
   }

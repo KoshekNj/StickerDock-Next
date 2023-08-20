@@ -1,17 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-const Tag = require("../../db/models/tag");
-
-interface iTag {
-  name: string;
-}
-async function getTags() {
-  try {
-    const res = await Tag.findAll();
-    return res;
-  } catch (err) {
-    return err;
-  }
-}
+const Tag = require("../../../db/models/tag");
 
 async function getTagById(id: number) {
   try {
@@ -24,15 +12,6 @@ async function getTagById(id: number) {
     return res;
   } catch (err) {
     return err;
-  }
-}
-
-async function createTag(tag: iTag) {
-  try {
-    const res = await Tag.create(tag);
-    return res;
-  } catch (error) {
-    return error;
   }
 }
 
@@ -54,8 +33,15 @@ export default async function handler(
   res: NextApiResponse<typeof Tag>
 ) {
   try {
-    const result = await getTags();
-    res.status(200).json({ result });
+    if ((req.method = "GET")) {
+      const tagId = req.query.id;
+      const response = await getTagById(tagId as any);
+      return res.status(200).json(response);
+    } else if ((req.method = "DELETE")) {
+      const tagId = req.query.id;
+      const response = await deleteTag(tagId as any);
+      return res.status(200).json(response);
+    }
   } catch (err) {
     res.status(500).json({ error: "failed to load data" });
   }

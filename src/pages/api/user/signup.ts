@@ -9,26 +9,15 @@ interface iUser {
   profilePicUrl: string;
   dateJoined: string;
 }
-async function getUsers() {
-  try {
-    const res = await User.findAll();
-    return res;
-  } catch (err) {
-    return err;
-  }
-}
 
-async function logInUser(email: string, password: string) {
-  try {
-    const user = await User.findOne({ where: { email: email } });
-    if ((user.password = password)) {
-      return user;
-    } else {
-      return "Not authorized";
-    }
-  } catch (err) {
-    return err;
-  }
+export interface iUserFull {
+  id: number;
+  email: string;
+  username: string;
+  password: string;
+  description: string;
+  profilePicUrl: string;
+  dateJoined: string;
 }
 
 async function signUpUser(user: iUser) {
@@ -37,22 +26,9 @@ async function signUpUser(user: iUser) {
     if (existingUser) {
       return "User with this email already exists";
     } else {
-      createUser(user);
+      const newUser = await createUser(user);
+      return newUser;
     }
-  } catch (err) {
-    return err;
-  }
-}
-
-async function getUserById(id: number) {
-  try {
-    const res = await User.findOne({
-      where: {
-        id: id,
-      },
-      raw: true,
-    });
-    return res;
   } catch (err) {
     return err;
   }
@@ -67,25 +43,14 @@ async function createUser(user: iUser) {
   }
 }
 
-async function deleteUser(id: number) {
-  try {
-    const res = await User.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res;
-  } catch (err) {
-    return err;
-  }
-}
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<typeof User>
 ) {
   try {
-    res.status(200).json("test");
+    const data = req.body;
+    const user = signUpUser(data);
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ error: "failed to load data" });
   }

@@ -1,18 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-const StickerPackTag = require("../../db/models/tag");
-const sequelize = require("../../db/config");
+const StickerPackTag = require("../../../db/models/tag");
+const sequelize = require("../../../db/config");
 
 interface iStickerPackTag {
   stickerPackId: number;
   tagId: number;
-}
-async function getAllstickerPackTags() {
-  try {
-    const res = await StickerPackTag.findAll();
-    return res;
-  } catch (err) {
-    return err;
-  }
 }
 
 async function getStickerPackTagById(id: number) {
@@ -27,15 +19,6 @@ async function getStickerPackTagById(id: number) {
     return stickerPackTag;
   } catch (err) {
     return err;
-  }
-}
-
-async function createStickerPackTag(stickerPackTag: iStickerPackTag) {
-  try {
-    const res = await StickerPackTag.create(stickerPackTag);
-    return res;
-  } catch (error) {
-    return error;
   }
 }
 
@@ -58,7 +41,15 @@ export default async function handler(
   res: NextApiResponse<typeof StickerPackTag>
 ) {
   try {
-    res.status(200).json("test");
+    const tagId = req.query.id;
+    if ((req.method = "GET")) {
+      const response = await getStickerPackTagById(tagId as any);
+      return res.status(200).json(response);
+    } else if ((req.method = "DELETE")) {
+      const stickerPackId = req.body.stickerPackId;
+      const response = await deleteStickerPackTag(tagId as any, stickerPackId);
+      return res.status(200).json(response);
+    }
   } catch (err) {
     res.status(500).json({ error: "failed to load data" });
   }

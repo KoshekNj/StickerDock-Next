@@ -33,12 +33,11 @@ export default async function handler(
   res: NextApiResponse<typeof Tag>
 ) {
   try {
+    const tagId = req.query.id;
     if ((req.method = "GET")) {
-      const tagId = req.query.id;
       const response = await getTagById(tagId as any);
       return res.status(200).json(response);
     } else if ((req.method = "DELETE")) {
-      const tagId = req.query.id;
       const response = await deleteTag(tagId as any);
       return res.status(200).json(response);
     }

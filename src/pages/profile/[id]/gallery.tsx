@@ -95,8 +95,9 @@ const Gallery = () => {
               </div>
             </div>
             <div className="text-red-800 text-sm">
-              <p className="mb-2">Edit profile</p>
-              <p>Settings</p>
+              <Link href={`/profile/${router.query.id}/settings`}>
+                Settings
+              </Link>
             </div>
           </div>
           <div className="flex flex-col items-center grow">

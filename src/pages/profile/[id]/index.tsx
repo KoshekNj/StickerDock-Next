@@ -7,9 +7,12 @@ import stickers from "../../../../public/stickers/index";
 import Select from "react-select";
 import { queryTypes, useQueryStates } from "next-usequerystate";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import NewStickerPack from "components/StickerPack/newStickerPack";
 
 const Profile = () => {
   const page = "My profile";
+  const router = useRouter();
   const Stickers = stickers;
   const packValues: IPackProps[] = [
     {
@@ -117,8 +120,9 @@ const Profile = () => {
               </div>
             </div>
             <div className="text-red-800 text-sm">
-              <p className="mb-2">Edit profile</p>
-              <p>Settings</p>
+              <Link href={`/profile/${router.query.id}/settings`}>
+                Settings
+              </Link>
             </div>
           </div>
           <div className="flex flex-col items-center w-2/3">
@@ -172,7 +176,8 @@ const Profile = () => {
               </form>
             </div>
 
-            <div className="mt-16 w-full flex">
+            <div className="mt-16 w-full flex flex-wrap justify-between">
+              <NewStickerPack></NewStickerPack>
               {packValues.map((value) => (
                 <StickerPack
                   key={value.title}

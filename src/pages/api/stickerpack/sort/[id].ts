@@ -72,10 +72,10 @@ export default async function handler(
   try {
     const type = req.query.type;
     const id = req.query.id;
-    if (type === "AZ") {
+    if (type === "asc") {
       const data = await sortStickerPacksAZ(id as any);
       res.status(200).json(data);
-    } else if (type === "ZA") {
+    } else if (type === "desc") {
       const data = await sortStickerPacksZA(id as any);
       res.status(200).json(data);
     } else if (type === "new") {

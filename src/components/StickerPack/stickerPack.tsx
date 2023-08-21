@@ -9,7 +9,7 @@ export interface IPackProps {
 
 const StickerPack = ({ title, author, tags, stickers }: IPackProps) => {
   return (
-    <div className="relative w-[60%] font-kameron">
+    <div className="relative w-[165px] font-kameron mr-8">
       <div className=" h-[395px] w-[165px] flex flex-col relative z-30 bg-orange-100 drop-shadow ">
         <div className="h-[18%] drop-shadow bg-slate-300 flex flex-col justify-center items-center">
           <p className="w-fit text-sm bold">{title}</p>

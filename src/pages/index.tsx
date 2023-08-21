@@ -83,7 +83,7 @@ export default function Edit() {
               <img className="edit__picture" src={image} />
             </Canvas>
           ) : (
-            <div className="edit__upload-area relative">
+            <div className="edit__upload-area relative w-[70%]">
               <div
                 className="absolute inset-0 flex flex-col justify-center items-center"
                 {...getRootProps()}

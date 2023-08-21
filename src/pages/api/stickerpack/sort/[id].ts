@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-const StickerPack = require("../../../../../db/models/stickerPack");
-const sequelize = require("../../../../../db/config");
+const StickerPack = require("../../../../db/models/stickerPack");
 
 async function sortStickerPacksAZ(id: number) {
   try {
@@ -87,6 +86,6 @@ export default async function handler(
       res.status(200).json(data);
     }
   } catch (err) {
-    res.status(500).json({ error: "failed to load data" });
+    res.status(500).end();
   }
 }

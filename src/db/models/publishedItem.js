@@ -16,12 +16,15 @@ const PublishedItem = db.define(
     },
     date: {
       type: Sequelize.DATE,
+      defaultValue: Sequelize.NOW,
     },
     likes: {
       type: Sequelize.INTEGER,
+      defaultValue: 0,
     },
     public: {
       type: Sequelize.BOOLEAN,
+      defaultValue: "public",
       allowNull: false,
     },
   },

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-const User = require("../../db/models/user");
+const User = require("../../../db/models/user");
 
 interface iUser {
   email: string;

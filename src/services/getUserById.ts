@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 import axios from "axios";
-import { iUserFull } from "pages/api/user";
+import { iUserFull } from "pages/api/user/[id]";
 
 export const getUserById = async (id: number) => {
   return axios

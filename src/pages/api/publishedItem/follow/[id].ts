@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-const PublishedItem = require("../../db/models/publishedItem");
-const sequelize = require("../../db/config");
+const PublishedItem = require("../../../../db/models/publishedItem");
+const sequelize = require("../../../../db/config");
 
 async function getPublishedItemFollow(id: number) {
   try {
     const res = await sequelize.query(
-      `SELECT * FROM bla.publishedItem INNER JOIN bla.follower ON bla.publisheditem.userId=bla.follower.followId WHERE bla.follower.userId=:userId ORDER BY bla.publishedItem.date DESC LIMIT 50; `,
+      `SELECT * FROM publishedItem INNER JOIN follower ON publisheditem.userId=follower.followId WHERE follower.userId=:userId ORDER BY publishedItem.date DESC LIMIT 50; `,
       {
         replacements: { userId: id },
         type: sequelize.QueryTypes.SELECT,

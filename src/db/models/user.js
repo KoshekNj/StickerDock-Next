@@ -29,6 +29,7 @@ const User = db.define(
     },
     dateJoined: {
       type: Sequelize.DATE,
+      defaultValue: Sequelize.NOW,
     },
   },
   {

@@ -24,6 +24,6 @@ const defaultOptions: iUserFullQueryOptions = {
   refetchOnWindowFocus: false,
 };
 
-export function useGetPersonioMyDocumentsQuery(id: number) {
+export function useGetUserById(id: number) {
   return useQuery(["user", String(id)], () => getUserById(id), defaultOptions);
 }

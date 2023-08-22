@@ -64,7 +64,7 @@ const Settings = () => {
                 </Form>
               </Formik>
 
-              <button className="rounded-full bg-red-500 text-white font-kameron m-4 px-2 py-1">
+              <button className="rounded-full bg-red-500 text-white m-4 px-2 py-1">
                 Delete profile
               </button>
             </div>

@@ -9,11 +9,13 @@ import { queryTypes, useQueryStates } from "next-usequerystate";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import NewStickerPack from "components/StickerPack/newStickerPack";
+import { useGetUserById } from "services/getUserById";
 
 const Profile = () => {
   const page = "My profile";
   const router = useRouter();
   const Stickers = stickers;
+  const { data: user, isLoading } = useGetUserById(1);
   const packValues: IPackProps[] = [
     {
       title: "Unknown sticker pack",
@@ -113,10 +115,14 @@ const Profile = () => {
                   className="rounded-full w-[40px] h-[40px] mr-4"
                   src="/images/kermit.png"
                 ></img>
-                <div>
-                  <p className="font-bold text-md">Username</p>
-                  <p>128 characters description</p>
-                </div>
+                {isLoading ? (
+                  <p>...</p>
+                ) : (
+                  <div>
+                    <p className="font-bold text-md">{user?.username}</p>
+                    <p>{user?.description}</p>
+                  </div>
+                )}
               </div>
             </div>
             <div className="text-red-800 text-sm">

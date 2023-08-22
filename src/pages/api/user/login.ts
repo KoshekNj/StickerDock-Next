@@ -29,7 +29,7 @@ export default async function handler(
   res: NextApiResponse<typeof User>
 ) {
   try {
-    const { userInfo } = req.body;
+    const userInfo = req.body;
     const user = await logInUser(userInfo.email, userInfo.password);
     return res.status(200).json(user);
   } catch (err) {

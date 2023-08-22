@@ -6,16 +6,40 @@ import { useDropzone } from "react-dropzone";
 const Create = () => {
   const page = "My profile";
   const [image, setImage] = React.useState("");
+  const [stickers, setStickers]: any = React.useState([]);
+
   const onDrop = React.useCallback((acceptedFiles: any) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(acceptedFiles[0]);
-    reader.onload = function () {
-      setImage(reader.result as any);
-    };
+    if (acceptedFiles.length === 1) {
+      const reader = new FileReader();
+      reader.readAsDataURL(acceptedFiles[0]);
+      reader.onload = function () {
+        setImage(reader.result as string);
+      };
+    } else {
+      for (let i = 0; i < acceptedFiles.length; i++) {
+        const reader = new FileReader();
+        reader.readAsDataURL(acceptedFiles[i]);
+        reader.onload = function () {
+          setStickers((stickers: any) => [...stickers, reader.result]);
+        };
+      }
+    }
   }, []);
+
   const { getRootProps, getInputProps, isDragActive, inputRef } = useDropzone({
     onDrop,
     multiple: false,
+    onDragEnter: () => null,
+    onDragOver: () => null,
+    onDragLeave: () => null,
+  });
+
+  const {
+    getRootProps: getRootStickerProps,
+    getInputProps: getInputStickerProps,
+  } = useDropzone({
+    onDrop,
+    multiple: true,
     onDragEnter: () => null,
     onDragOver: () => null,
     onDragLeave: () => null,
@@ -34,7 +58,7 @@ const Create = () => {
             console.log(value);
           }}
         >
-          <Form className="flex flex-col items-center w-1/2 p-3">
+          <Form className="flex flex-col items-center w-1/2 p-3 z-30">
             <label htmlFor="name">Sticker pack name:</label>
             <Field
               type="text"
@@ -68,9 +92,14 @@ const Create = () => {
             <div className="edit__upload-area relative m-4 w-1/2">
               <div
                 className="absolute inset-0 flex flex-col justify-center items-center"
-                {...getRootProps()}
+                {...getRootStickerProps()}
               >
-                <input ref={inputRef} {...getInputProps()} name="stickers" />
+                <input
+                  ref={inputRef}
+                  {...getInputStickerProps()}
+                  name="stickers"
+                  multiple
+                />
                 {isDragActive ? (
                   <p>Drop the files here ...</p>
                 ) : (
@@ -95,10 +124,32 @@ const Create = () => {
               className="m-2 rounded-lg block"
               name="tags"
             ></Field>
+            <button
+              type="submit"
+              className="rounded-full bg-myYellow m-4 px-2 py-1"
+            >
+              Publish pack
+            </button>
           </Form>
         </Formik>
 
-        <div></div>
+        <div className="w-1/2 p-4">
+          <p className="text-lg">Previews:</p>
+          {image ? (
+            <img src={image} className="w-1/2 m-3"></img>
+          ) : (
+            <p>No pictures chosen for preview yet</p>
+          )}
+          <div className="flex flex-wrap">
+            {stickers ? (
+              stickers.map((sticker: string) => (
+                <img src={sticker} key={sticker} className="w-[45px] m-3" />
+              ))
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

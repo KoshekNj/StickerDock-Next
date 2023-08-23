@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getStickerByStickerPackId } from "../sticker/[id]";
+import { getTagsByPackId } from "../stickerpacktag/stickerpack/[id]";
 const StickerPack = require("../../../db/models/stickerPack");
 const sequelize = require("../../../db/config");
 
@@ -25,8 +26,9 @@ async function getStickerPackById(id: number) {
       raw: true,
     });
 
-    let stickers = getStickerByStickerPackId(res.id);
-    return { ...res, stickers: stickers };
+    let stickers = await getStickerByStickerPackId(res.id);
+    let tags = await getTagsByPackId(res.id);
+    return { ...res, stickers: stickers, tags: tags };
   } catch (err) {
     return err;
   }

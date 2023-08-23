@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { deleteImage } from "../image/[id]";
 const PublishedItem = require("../../../db/models/publishedItem");
 const sequelize = require("../../../db/config");
-
+const Image = require("../../../db/models/image");
 interface iPublishedItem {
   userId: number;
   imageId: number;
@@ -15,6 +15,7 @@ interface iPublishedItem {
 async function getPublishedItemById(id: number) {
   try {
     const res = await PublishedItem.findOne({
+      include: Image,
       where: {
         id: id,
       },
@@ -48,11 +49,11 @@ export default async function handler(
   res: NextApiResponse<typeof PublishedItem>
 ) {
   try {
-    if ((req.method = "GET")) {
+    if (req.method === "GET") {
       const itemId = req.query.id;
       const response = await getPublishedItemById(itemId as any);
       return res.status(200).json(response);
-    } else if ((req.method = "DELETE")) {
+    } else if (req.method === "DELETE") {
       const itemId = req.query.id;
       const response = await deletePublishedItem(itemId as any);
       return res.status(200).json(response);

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { createPublishedItem } from "../publishedItem";
+import { createPublishedItem } from "../publisheditem";
 const Image = require("../../../db/models/image");
 
 export interface iImage {
@@ -24,7 +24,11 @@ export default async function handler(
 ) {
   try {
     const image = req.body;
-    const data = await createImage(image);
+    console.log(image.payload);
+    const data = await createImage({
+      userId: image.payload.userId,
+      imageUrl: image.payload.imageUrl,
+    });
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json({ error: "failed to load data" });

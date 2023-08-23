@@ -8,11 +8,14 @@ import stickers from "../../public/stickers/index";
 import { Sticker } from "components/Sticker/sticker";
 import { Canvas, IStickerWithPosition } from "components/Sticker/Canvas/canvas";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { useCreateImage } from "services/createImage";
+import { useGetStickerPackyById } from "services/getStickerPackById";
 //import handler from "./api/stickerpack";
 
 export default function Edit() {
   const page = "Editor";
   const [image, setImage] = React.useState("");
+  const { mutateAsync: createImage } = useCreateImage();
   const onDrop = React.useCallback((acceptedFiles: any) => {
     const reader = new FileReader();
     reader.readAsDataURL(acceptedFiles[0]);
@@ -29,14 +32,7 @@ export default function Edit() {
     onDragLeave: () => null,
   });
 
-  const Stickers = stickers;
-
-  const packValues: IPackProps = {
-    title: "Unknown sticker pack",
-    author: "User",
-    tags: ["unknown", "notMadeYet", "blank", "VeuropskaUnija"],
-    stickers: Stickers,
-  };
+  const { data: packValues, isLoading } = useGetStickerPackyById(1);
 
   function handleDragEnd(event: DragEndEvent) {
     console.log((event.activatorEvent as any).clientX);
@@ -60,7 +56,7 @@ export default function Edit() {
   const [canvasStickers, setCanvasStickers] = React.useState<
     IStickerWithPosition[]
   >([]);
-  console.log(canvasStickers);
+  //console.log(canvasStickers);
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <div className=" bg-cover min-h-screen flex flex-col bg-fixed bg-background font-kameron pb-10">
@@ -68,20 +64,29 @@ export default function Edit() {
         <Header page={page}></Header>
         <div className="edit flex-1">
           <div className="edit__sticker">
-            {/* <button className="px-2 my-3 py-0.5 rounded-lg text-sm bg-myYellow">
-            Choose another pack
-          </button> */}
             <StickerPack
-              title={packValues.title}
-              author={packValues.author}
-              tags={packValues.tags}
-              stickers={packValues.stickers}
+              title={packValues?.name}
+              author={packValues?.userId}
+              tags={packValues?.tags}
+              stickers={packValues?.stickers}
             ></StickerPack>
           </div>
           {image ? (
-            <Canvas id="canvas" canvasStickers={canvasStickers}>
-              <img className="edit__picture" src={image} />
-            </Canvas>
+            <>
+              <Canvas id="canvas" canvasStickers={canvasStickers}>
+                <img className="edit__picture" src={image} />
+              </Canvas>
+              <div>
+                <button onClick={() => setCanvasStickers([])}>Reset</button>
+                <button
+                  onClick={() =>
+                    createImage({ userId: 1, imageUrl: "hehe.jpg" })
+                  }
+                >
+                  Save
+                </button>
+              </div>
+            </>
           ) : (
             <div className="edit__upload-area relative w-[70%]">
               <div

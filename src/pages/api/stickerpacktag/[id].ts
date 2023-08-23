@@ -10,7 +10,7 @@ interface iStickerPackTag {
 async function getStickerPackTagById(id: number) {
   try {
     const stickerPackTag = await sequelize.query(
-      `SELECT * FROM stickerPackTag INNER JOIN tag ON stickerPackTag.tagId=tag.id WHERE stickerPackTag.contactId=:contactId `,
+      `SELECT * FROM stickerPackTag INNER JOIN tag ON stickerPackTag.tagId=tag.id WHERE stickerPackTag.tagId=:tagId `,
       {
         replacements: { tagId: id },
         type: sequelize.QueryTypes.SELECT,

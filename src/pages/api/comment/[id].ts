@@ -8,7 +8,11 @@ interface iComment {
 }
 async function getComments(id: number) {
   try {
-    const res = await Comment.findAll({ where: { publisheditemid: id } });
+    console.log("in", id);
+    const res = await Comment.findAll({
+      where: { publishedItemId: id },
+      raw: true,
+    });
     return res;
   } catch (err) {
     return err;
@@ -42,17 +46,16 @@ export default async function handler(
   res: NextApiResponse<typeof Comment>
 ) {
   try {
-    if ((req.method = "POST")) {
-      const id = req.query.id;
+    const id = req.query.id;
+
+    if (req.method === "POST") {
       const data = { ...req.body, publishedItemId: id };
       const response = await createComment(data);
       return res.status(200).json(response);
-    } else if ((req.method = "GET")) {
-      const publishedItemId = req.query.id;
-      const response = await getComments(publishedItemId as any);
+    } else if (req.method === "GET") {
+      const response = await getComments(id as any);
       return res.status(200).json(response);
-    } else if ((req.method = "DELETE")) {
-      const id = req.query.id;
+    } else if (req.method === "DELETE") {
       const response = await deleteComment(id as any);
       return res.status(200).json(response);
     }

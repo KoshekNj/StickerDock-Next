@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { createSticker } from "../sticker";
-import { createPublishedItem } from "../publishedItem";
+import { createPublishedItem } from "../publisheditem";
+
 const StickerPack = require("../../../db/models/stickerPack");
 
 export interface iStickerPack {

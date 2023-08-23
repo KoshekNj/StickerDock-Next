@@ -5,7 +5,7 @@ const StickerPack = require("./stickerPack");
 const Image = require("./image");
 
 const PublishedItem = db.define(
-  "publishedItem",
+  "publisheditem",
   {
     id: {
       type: Sequelize.INTEGER,
@@ -24,7 +24,7 @@ const PublishedItem = db.define(
     },
     public: {
       type: Sequelize.BOOLEAN,
-      defaultValue: "public",
+      defaultValue: true,
       allowNull: false,
     },
   },

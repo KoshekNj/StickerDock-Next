@@ -10,6 +10,7 @@ interface iPublishedItem {
 
 export async function createPublishedItem(publishedItem: iPublishedItem) {
   try {
+    console.log(publishedItem);
     const res = await PublishedItem.create(publishedItem);
     return res;
   } catch (error) {

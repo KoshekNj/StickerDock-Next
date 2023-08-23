@@ -1,10 +1,10 @@
 import { Sticker } from "components/Sticker/sticker";
 
 export interface IPackProps {
-  title: string;
-  author: string;
-  tags: Array<string>;
-  stickers: Array<any>;
+  title?: string;
+  author?: any;
+  tags?: Array<string>;
+  stickers?: Array<any>;
 }
 
 const StickerPack = ({ title, author, tags, stickers }: IPackProps) => {
@@ -16,8 +16,8 @@ const StickerPack = ({ title, author, tags, stickers }: IPackProps) => {
           <p className="w-fit text-sm">created by: {author}</p>
         </div>
         <div className="flex flex-wrap justify-center items-center">
-          {stickers.map((sticker: any) => (
-            <Sticker key={sticker.src} id={sticker.src} src={sticker.src} />
+          {stickers?.map((sticker: any) => (
+            <Sticker key={sticker.id} id={sticker.id} src={sticker.imageUrl} />
           ))}
         </div>
       </div>
@@ -28,7 +28,7 @@ const StickerPack = ({ title, author, tags, stickers }: IPackProps) => {
         <div className="h-[18%] drop-shadow bg-slate-300"></div>
       </div>
       <div className="mt-2 min-w-[165px] flex flex-wrap">
-        {tags.map((tag) => (
+        {tags?.map((tag) => (
           <p className="text-xs w-fit" key={tag}>
             #{tag}
           </p>

@@ -4,6 +4,7 @@ import Header from "components/Header/header";
 import Masonry from "@mui/lab/Masonry";
 import React from "react";
 import { useRouter } from "next/router";
+import { usegetPublishedItemTrending } from "services/getPublishedItemTrending";
 
 const Trending = () => {
   const router = useRouter();
@@ -13,6 +14,8 @@ const Trending = () => {
 
   const tabs: tabName[] = ["Trending", "Following"];
   const [selectedTab, setSelectedTab] = React.useState<tabName>("Trending");
+
+  const { data: trendingData, isLoading } = usegetPublishedItemTrending();
   const testValues = [
     [
       {
@@ -83,9 +86,9 @@ const Trending = () => {
             <Masonry columns={3} spacing={5}>
               {testValues[0].map((value) => (
                 <img
-                  key={value.image}
+                  key={trendingData?.id}
                   className="shadow"
-                  src={value.image}
+                  src={trendingData?.imageUrl}
                   onClick={() => {
                     router.push(`/item/${value.id}`);
                   }}

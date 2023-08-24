@@ -42,10 +42,10 @@ export default async function handler(
 ) {
   try {
     const tagId = req.query.id;
-    if ((req.method = "GET")) {
+    if (req.method === "GET") {
       const response = await getStickerPackTagById(tagId as any);
       return res.status(200).json(response);
-    } else if ((req.method = "DELETE")) {
+    } else if (req.method === "DELETE") {
       const stickerPackId = req.body.stickerPackId;
       const response = await deleteStickerPackTag(tagId as any, stickerPackId);
       return res.status(200).json(response);

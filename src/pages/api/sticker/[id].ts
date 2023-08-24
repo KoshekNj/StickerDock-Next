@@ -38,11 +38,11 @@ export default async function handler(
   res: NextApiResponse<typeof Sticker>
 ) {
   try {
-    if ((req.method = "GET")) {
+    if (req.method === "GET") {
       const stickerId = req.query.id;
       const response = await getStickerByStickerPackId(stickerId as any);
       return res.status(200).json(response);
-    } else if ((req.method = "DELETE")) {
+    } else if (req.method === "DELETE") {
       const stickerId = req.query.id;
       const response = await deleteStickers(stickerId as any);
       return res.status(200).json(response);

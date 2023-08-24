@@ -9,12 +9,15 @@ import { Sticker } from "components/Sticker/sticker";
 import { Canvas, IStickerWithPosition } from "components/Sticker/Canvas/canvas";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { useCreateImage } from "services/createImage";
-import { useGetStickerPackyById } from "services/getStickerPackById";
+import { useGetStickerPackById } from "services/getStickerPackById";
+import { useGetStickerPacksByUserId } from "services/getStickerPacksByUserId";
 //import handler from "./api/stickerpack";
 
 export default function Edit() {
   const page = "Editor";
   const [image, setImage] = React.useState("");
+  //const [stickerPackid, setStickerPackId] = React.useState(0);
+  const [index, setIndex] = React.useState(0);
   const { mutateAsync: createImage } = useCreateImage();
   const onDrop = React.useCallback((acceptedFiles: any) => {
     const reader = new FileReader();
@@ -23,7 +26,7 @@ export default function Edit() {
       setImage(reader.result as any);
     };
   }, []);
-  //const [picture, setPicture] = React.useState([]);
+
   const { getRootProps, getInputProps, isDragActive, inputRef } = useDropzone({
     onDrop,
     multiple: false,
@@ -32,7 +35,10 @@ export default function Edit() {
     onDragLeave: () => null,
   });
 
-  const { data: packValues, isLoading } = useGetStickerPackyById(1);
+  const { data: packIds } = useGetStickerPacksByUserId(1);
+  //if (packIds) setStickerPackId(Number(packIds[0].id));
+
+  let { data: packValues, isLoading } = useGetStickerPackById(1);
 
   function handleDragEnd(event: DragEndEvent) {
     console.log((event.activatorEvent as any).clientX);
@@ -64,6 +70,26 @@ export default function Edit() {
         <Header page={page}></Header>
         <div className="edit flex-1">
           <div className="edit__sticker">
+            <div className="flex justify-between px-5 mb-3 w-[165px]">
+              <button
+                disabled={index === 0 ? true : false}
+                className="rounded-full bg-myYellow px-2 disabled:bg-slate-300"
+                onClick={() => {
+                  setIndex((count) => count - 1);
+                }}
+              >
+                ⇐
+              </button>
+              <button
+                disabled={packIds?.length === index + 1 ? true : false}
+                className="rounded-full bg-myYellow px-2 disabled:bg-slate-300"
+                onClick={() => {
+                  setIndex((count) => count + 1);
+                }}
+              >
+                ⇒
+              </button>
+            </div>
             <StickerPack
               title={packValues?.name}
               author={packValues?.userId}

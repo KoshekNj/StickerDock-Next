@@ -74,10 +74,10 @@ export default async function handler(
   try {
     const stickerPackId = req.query.id;
     const tag = req.query.tag;
-    if ((req.method = "GET") && !tag) {
+    if (req.method === "GET" && !tag) {
       const response = await getStickerPackById(stickerPackId as any);
       return res.status(200).json(response);
-    } else if ((req.method = "DELETE")) {
+    } else if (req.method === "DELETE") {
       const response = await deleteStickerPack(stickerPackId as any);
       return res.status(200).json(response);
     } else {

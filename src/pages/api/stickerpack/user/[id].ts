@@ -14,14 +14,13 @@ export interface iStickerPackFull {
 async function getStickerPackByUserId(id: number) {
   try {
     const stickerPacks = await StickerPack.findAll({
+      attributes: ["id"],
       where: {
         userId: id,
       },
       raw: true,
     });
 
-    let stickers = getStickerByStickerPackId(stickerPacks.id);
-    let tags = getTagsByPackId(stickerPacks.id);
     return stickerPacks;
   } catch (err) {
     return err;

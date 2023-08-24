@@ -4,16 +4,11 @@ import axios from "axios";
 
 interface IStickerPack {
   id: number;
-  name: string;
-  userId: number;
-  labelUrl: string;
-  stickers: [];
-  tags: [];
 }
 
-export const getStickerPackById = async (id: number) => {
+export const getStickerPacksByUserId = async (id: number) => {
   return axios
-    .get<IStickerPack>("/api/stickerpack/" + id)
+    .get<IStickerPack[]>("/api/stickerpack/user/" + id)
     .then((res) => res.data)
     .catch((err) => {
       console.error(err);
@@ -22,9 +17,9 @@ export const getStickerPackById = async (id: number) => {
 };
 
 type IStickerPackFullQueryOptions = UseQueryOptions<
-  IStickerPack,
+  IStickerPack[],
   unknown,
-  IStickerPack,
+  IStickerPack[],
   string[]
 >;
 
@@ -32,10 +27,10 @@ const defaultOptions: IStickerPackFullQueryOptions = {
   refetchOnWindowFocus: false,
 };
 
-export function useGetStickerPackById(id: number) {
+export function useGetStickerPacksByUserId(id: number) {
   return useQuery(
-    ["pack", String(id)],
-    () => getStickerPackById(id),
+    ["packs", String(id)],
+    () => getStickerPacksByUserId(id),
     defaultOptions
   );
 }

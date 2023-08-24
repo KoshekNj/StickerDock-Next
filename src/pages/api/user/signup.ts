@@ -5,9 +5,6 @@ interface iUser {
   email: string;
   username: string;
   password: string;
-  description: string;
-  profilePicUrl: string;
-  dateJoined: string;
 }
 
 export interface iUserFull {
@@ -23,10 +20,12 @@ export interface iUserFull {
 async function signUpUser(user: iUser) {
   try {
     const existingUser = await User.findOne({ where: { email: user.email } });
+
     if (existingUser) {
       return "User with this email already exists";
     } else {
       const newUser = await createUser(user);
+      console.log(newUser);
       return newUser;
     }
   } catch (err) {
@@ -49,7 +48,7 @@ export default async function handler(
 ) {
   try {
     const data = req.body;
-    const user = signUpUser(data);
+    const user = await signUpUser(data.payload);
     res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ error: "failed to load data" });

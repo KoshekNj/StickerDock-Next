@@ -33,11 +33,11 @@ export default async function handler(
   res: NextApiResponse<typeof Image>
 ) {
   try {
-    if ((req.method = "GET")) {
+    if (req.method === "GET") {
       const imageId = req.query.id;
       const response = await getImageById(imageId as any);
       return res.status(200).json(response);
-    } else if ((req.method = "DELETE")) {
+    } else if (req.method === "DELETE") {
       const imageId = req.query.id;
       const response = await deleteImage(imageId as any);
       return res.status(200).json(response);

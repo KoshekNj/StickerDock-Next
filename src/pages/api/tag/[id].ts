@@ -34,10 +34,10 @@ export default async function handler(
 ) {
   try {
     const tagId = req.query.id;
-    if ((req.method = "GET")) {
+    if (req.method === "GET") {
       const response = await getTagById(tagId as any);
       return res.status(200).json(response);
-    } else if ((req.method = "DELETE")) {
+    } else if (req.method === "DELETE") {
       const response = await deleteTag(tagId as any);
       return res.status(200).json(response);
     }

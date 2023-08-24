@@ -50,16 +50,16 @@ export default async function handler(
   res: NextApiResponse<typeof Follower>
 ) {
   try {
-    if ((req.method = "POST")) {
+    if (req.method === "POST") {
       const userId = req.query.userId;
       const followId = req.query.id;
       const response = await createFollower(userId as any, followId as any);
       return res.status(200).json(response);
-    } else if ((req.method = "GET")) {
+    } else if (req.method === "GET") {
       const userId = req.query.id;
       const response = await getFollowerById(userId as any);
       return res.status(200).json(response);
-    } else if ((req.method = "DELETE")) {
+    } else if (req.method === "DELETE") {
       const userId = req.query.userId;
       const followId = req.query.id;
       const response = await deleteFollower(userId as any, followId as any);

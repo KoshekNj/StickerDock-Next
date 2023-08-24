@@ -4,7 +4,7 @@ import Header from "components/Header/header";
 import Masonry from "@mui/lab/Masonry";
 import React from "react";
 import { useRouter } from "next/router";
-import { usegetPublishedItemTrending } from "services/getPublishedItemTrending";
+import { useGetPublishedItemTrending } from "services/getPublishedItemTrending";
 import { useGetPublishedItemFollow } from "services/getPublishedItemFollow";
 
 const Trending = () => {
@@ -17,7 +17,7 @@ const Trending = () => {
   const tabs: tabName[] = ["Trending", "Following"];
   const [selectedTab, setSelectedTab] = React.useState<tabName>("Trending");
 
-  const { data: trendingData, isLoading } = usegetPublishedItemTrending();
+  const { data: trendingData, isLoading } = useGetPublishedItemTrending();
   const { data: followingData } = useGetPublishedItemFollow(Number(id));
   const testValues = [
     [

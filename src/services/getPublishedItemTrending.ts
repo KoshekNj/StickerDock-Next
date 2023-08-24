@@ -34,7 +34,7 @@ const defaultOptions: IPublishedItemFullQueryOptions = {
   refetchOnWindowFocus: false,
 };
 
-export function usegetPublishedItemTrending() {
+export function useGetPublishedItemTrending() {
   return useQuery(
     ["publisheditem", String()],
     () => getPublishedItemTrending(),

@@ -3,13 +3,13 @@ import StickerPack, { IPackProps } from "components/StickerPack/stickerPack";
 import { useRouter } from "next/router";
 import React from "react";
 import { useGetComments } from "services/getComments";
-import { useGetPublishedItemyById } from "services/getPublishedItemById";
+import { useGetPublishedItemById } from "services/getPublishedItemById";
 
 const SingleItem = () => {
   const page = "SingleItem";
   const router = useRouter();
   const { id } = router.query;
-  const { data: image } = useGetPublishedItemyById(Number(id));
+  const { data: image } = useGetPublishedItemById(Number(id));
   const { data: comments } = useGetComments(Number(id));
 
   return (

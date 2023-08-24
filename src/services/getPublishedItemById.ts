@@ -35,7 +35,7 @@ const defaultOptions: IPublishedItemFullQueryOptions = {
   refetchOnWindowFocus: false,
 };
 
-export function useGetPublishedItemyById(id: number) {
+export function useGetPublishedItemById(id: number) {
   return useQuery(
     ["item", String(id)],
     () => getPublishedItemById(id),

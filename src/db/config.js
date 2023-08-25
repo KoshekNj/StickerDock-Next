@@ -1,13 +1,15 @@
 const { Sequelize } = require("sequelize");
-//const buildModels = require("./models/index");
+require("dotenv").config();
 
-const db = new Sequelize("bla", "root", "Mgmt567", {
-  host: "127.0.0.1",
-  port: 3306,
-  dialect: "mysql",
-  // ssl: true
-});
-
-//db.sync({ force: true });
+const db = new Sequelize(
+  process.env.DB_DATABASE,
+  process.env.DB_USERNAME,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    dialect: "mysql",
+    //ssl: true,
+  }
+);
 
 module.exports = db;

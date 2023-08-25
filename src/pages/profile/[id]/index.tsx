@@ -21,7 +21,6 @@ const Profile = () => {
   const { data: user, isLoading } = useGetUserById(1);
 
   const { data: packValue } = useGetStickerPacksByUserId(Number(id));
-  console.log("pack value", packValue);
 
   let [searchParams, setSearchParams] = useQueryStates({
     q: queryTypes.string,

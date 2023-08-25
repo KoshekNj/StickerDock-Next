@@ -1,14 +1,23 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 const StickerPackTag = require("../../../db/models/tag");
-
+const sequelize = require("../../../db/config");
 interface iStickerPackTag {
   stickerPackId: number;
   tagId: number;
 }
 
-async function createStickerPackTag(stickerPackTag: iStickerPackTag) {
+export async function createStickerPackTag(stickerPackTag: iStickerPackTag) {
   try {
-    const res = await StickerPackTag.create(stickerPackTag);
+    const res = await sequelize.query(
+      ` INSERT INTO stickerpacktags (tagId,stickerPackId) VALUES ($tagId,$stickerPackId );`,
+      {
+        bind: {
+          tagId: stickerPackTag.tagId,
+          stickerPackId: stickerPackTag.stickerPackId,
+        },
+        type: sequelize.QueryTypes.INSERT,
+      }
+    );
     return res;
   } catch (error) {
     return error;

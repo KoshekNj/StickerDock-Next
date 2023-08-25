@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 const Sticker = require("../../../db/models/sticker");
+const sequelize = require("../../../db/config");
 
 export interface iSticker {
   stickerPackId: number;
@@ -8,7 +9,16 @@ export interface iSticker {
 
 export async function createSticker(sticker: iSticker) {
   try {
-    const res = await Sticker.create(sticker);
+    const res = await sequelize.query(
+      ` INSERT INTO sticker (id,imageUrl,stickerPackId) VALUES (DEFAULT,$imageUrl,$stickerPackId );`,
+      {
+        bind: {
+          imageUrl: sticker.imageUrl,
+          stickerPackId: sticker.stickerPackId,
+        },
+        type: sequelize.QueryTypes.INSERT,
+      }
+    );
     return res;
   } catch (error) {
     return error;

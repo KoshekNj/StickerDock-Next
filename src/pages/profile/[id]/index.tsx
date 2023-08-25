@@ -10,51 +10,17 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import NewStickerPack from "components/StickerPack/newStickerPack";
 import { useGetUserById } from "services/getUserById";
+import { useGetStickerPacksByUserId } from "services/getStickerPacksByUserId";
+import { useGetStickerPackById } from "services/getStickerPackById";
 
 const Profile = () => {
   const page = "My profile";
   const router = useRouter();
   const Stickers = stickers;
   const { data: user, isLoading } = useGetUserById(1);
-  const packValues: IPackProps[] = [
-    {
-      title: "Unknown sticker pack",
-      author: "User",
-      tags: ["gdfg"],
-      stickers: Stickers,
-    },
-    {
-      title: "Cute Smiley Pack",
-      author: "User",
-      tags: ["smiley", "rainbow", "clouds", "sun", "rain"],
-      stickers: Stickers,
-    },
-    {
-      title: "Fantasy Pack",
-      author: "User",
-      tags: ["fantasy", "unicorn", "castle", "rainbow"],
-      stickers: Stickers,
-    },
-  ];
 
-  const testValues = [
-    {
-      image: "//picsum.photos/200/200",
-      id: "1",
-    },
-    {
-      image: "//picsum.photos/160/450",
-      id: "2",
-    },
-    {
-      image: "//picsum.photos/450/450",
-      link: "3",
-    },
-    {
-      image: "//picsum.photos/300/700",
-      link: "4",
-    },
-  ];
+  const { data: packValue } = useGetStickerPacksByUserId(1);
+  console.log("pack value", packValue);
 
   let [searchParams, setSearchParams] = useQueryStates({
     q: queryTypes.string,
@@ -184,13 +150,13 @@ const Profile = () => {
 
             <div className="mt-16 w-full flex flex-wrap justify-between">
               <NewStickerPack></NewStickerPack>
-              {packValues.map((value) => (
+              {packValue?.map((packValue, i) => (
                 <StickerPack
-                  key={value.title}
-                  title={value.title}
-                  author={value.author}
-                  tags={value.tags}
-                  stickers={value.stickers}
+                  key={i}
+                  title={packValue?.name}
+                  author={packValue?.userId}
+                  tags={packValue?.tags}
+                  stickers={packValue?.stickers}
                 />
               ))}
             </div>

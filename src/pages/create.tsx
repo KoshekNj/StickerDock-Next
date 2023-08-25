@@ -1,13 +1,15 @@
 import Header from "components/Header/header";
 import { Field, Form, Formik } from "formik";
+import { userAgent } from "next/server";
 import React from "react";
 import { useDropzone } from "react-dropzone";
+import { useCreateStickerPack } from "services/createStickerPack";
 
 const Create = () => {
   const page = "My profile";
   const [image, setImage] = React.useState("");
   const [stickers, setStickers]: any = React.useState([]);
-
+  const { mutateAsync: createStickerPack } = useCreateStickerPack();
   const onDrop = React.useCallback((acceptedFiles: any) => {
     if (acceptedFiles.length === 1) {
       const reader = new FileReader();
@@ -51,11 +53,16 @@ const Create = () => {
       <div className="flex h-[100vh] mt-20">
         <Formik
           initialValues={{
+            name: "",
             labelUrl: "",
-            stickers: [],
+            stickers: [] as string[],
+            tags: [],
+            userId: 1,
           }}
           onSubmit={(value) => {
-            console.log(value);
+            value.labelUrl = "hehe.jpg"; //image
+            value.stickers = ["f.jpg", "j.jpg"]; //stickers
+            createStickerPack(value);
           }}
         >
           <Form className="flex flex-col items-center w-1/2 p-3 z-30">
@@ -81,7 +88,10 @@ const Create = () => {
                       alt="exclamation mark icon"
                     ></img>
                     <p className="my-1">Drop your pictures here or</p>
-                    <button className="bg-myYellow rounded-md text-sm py-0.5 max-w-min whitespace-nowrap p-2 ">
+                    <button
+                      type="button"
+                      className="bg-myYellow rounded-md text-sm py-0.5 max-w-min whitespace-nowrap p-2 "
+                    >
                       Browse folders
                     </button>
                   </>
@@ -110,7 +120,10 @@ const Create = () => {
                       alt="exclamation mark icon"
                     ></img>
                     <p className="my-1">Drop your pictures here or</p>
-                    <button className="bg-myYellow rounded-md text-sm py-0.5 max-w-min whitespace-nowrap  p-2 ">
+                    <button
+                      type="button"
+                      className="bg-myYellow rounded-md text-sm py-0.5 max-w-min whitespace-nowrap  p-2 "
+                    >
                       Browse folders
                     </button>
                   </>
@@ -118,7 +131,7 @@ const Create = () => {
               </div>
             </div>
 
-            <label htmlFor="tags">Sticker pack name:</label>
+            <label htmlFor="tags">Sticker pack tags:</label>
             <Field
               type="text"
               className="m-2 rounded-lg block"

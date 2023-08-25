@@ -1,6 +1,8 @@
 import Header from "components/Header/header";
 import React, { useState } from "react";
 import { Formik, Field, Form } from "formik";
+import { useRouter } from "next/router";
+import { useUpdateUser } from "services/updateUser";
 
 const user = {
   imageUrl: "/images/kermit.png",
@@ -9,7 +11,10 @@ const user = {
 
 const Settings = () => {
   const page = "My profile";
-
+  const router = useRouter();
+  const { id } = router.query;
+  console.log(id);
+  const { mutateAsync: updateUser } = useUpdateUser();
   const [profile, setPicture] = useState("");
   React.useEffect(() => {
     setPicture(user.imageUrl);
@@ -33,12 +38,14 @@ const Settings = () => {
           <div className="">
             <div className="flex flex-col items-center p-3">
               <Formik
+                enableReinitialize
                 initialValues={{
-                  profile: user.imageUrl,
+                  profilePicUrl: user.imageUrl,
                   description: user.description,
+                  id: Number(id),
                 }}
-                onSubmit={(value) => {
-                  console.log(value);
+                onSubmit={async (value) => {
+                  await updateUser(value);
                 }}
               >
                 <Form className="flex flex-col items-center">

@@ -3,7 +3,7 @@ const StickerPack = require("./stickerPack");
 const Tag = require("./tag");
 
 const StickerPackTags = db.define(
-  "stickerPackTags",
+  "stickerpacktags",
   {},
   {
     freezeTableName: true,

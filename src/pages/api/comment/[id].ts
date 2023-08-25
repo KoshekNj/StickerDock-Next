@@ -1,14 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 const Comment = require("../../../db/models/comment");
+const sequelize = require("../../../db/config");
 
 interface iComment {
-  publisheditemid: number;
+  publishedItemId: number;
   text: string;
-  date: string;
 }
 async function getComments(id: number) {
   try {
-    console.log("in", id);
     const res = await Comment.findAll({
       where: { publishedItemId: id },
       raw: true,
@@ -21,7 +20,16 @@ async function getComments(id: number) {
 
 async function createComment(comment: iComment) {
   try {
-    const res = await Comment.create(comment);
+    const res = await sequelize.query(
+      ` INSERT INTO comment (id, text, date, publishedItemId) VALUES (DEFAULT,$text,DEFAULT,$publishedItemId);`,
+      {
+        bind: {
+          text: comment.text,
+          publishedItemId: comment.publishedItemId,
+        },
+        type: sequelize.QueryTypes.INSERT,
+      }
+    );
     return res;
   } catch (error) {
     return error;
@@ -47,9 +55,8 @@ export default async function handler(
 ) {
   try {
     const id = req.query.id;
-
     if (req.method === "POST") {
-      const data = { ...req.body, publishedItemId: id };
+      const data = { ...req.body, publishedItemId: Number(id) };
       const response = await createComment(data);
       return res.status(200).json(response);
     } else if (req.method === "GET") {

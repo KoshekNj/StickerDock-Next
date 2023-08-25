@@ -3,7 +3,7 @@ import { Sticker } from "components/Sticker/sticker";
 export interface IPackProps {
   title?: string;
   author?: any;
-  tags?: Array<string>;
+  tags?: any;
   stickers?: Array<any>;
 }
 
@@ -28,9 +28,9 @@ const StickerPack = ({ title, author, tags, stickers }: IPackProps) => {
         <div className="h-[18%] drop-shadow bg-slate-300"></div>
       </div>
       <div className="mt-2 min-w-[165px] flex flex-wrap">
-        {tags?.map((tag) => (
+        {tags?.map((tag: any) => (
           <p className="text-xs w-fit" key={tag}>
-            #{tag}
+            #{tag.name}
           </p>
         ))}
       </div>

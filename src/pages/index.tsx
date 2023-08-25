@@ -35,10 +35,8 @@ export default function Edit() {
     onDragLeave: () => null,
   });
 
-  const { data: packIds } = useGetStickerPacksByUserId(1);
+  const { data: packValues } = useGetStickerPacksByUserId(1);
   //if (packIds) setStickerPackId(Number(packIds[0].id));
-
-  let { data: packValues, isLoading } = useGetStickerPackById(1);
 
   function handleDragEnd(event: DragEndEvent) {
     console.log((event.activatorEvent as any).clientX);
@@ -81,7 +79,7 @@ export default function Edit() {
                 ⇐
               </button>
               <button
-                disabled={packIds?.length === index + 1 ? true : false}
+                disabled={packValues?.length === index + 1 ? true : false}
                 className="rounded-full bg-myYellow px-2 disabled:bg-slate-300"
                 onClick={() => {
                   setIndex((count) => count + 1);
@@ -91,10 +89,10 @@ export default function Edit() {
               </button>
             </div>
             <StickerPack
-              title={packValues?.name}
-              author={packValues?.userId}
-              tags={packValues?.tags}
-              stickers={packValues?.stickers}
+              title={packValues?.[index].name}
+              author={packValues?.[index].userId}
+              tags={packValues?.[index].tags}
+              stickers={packValues?.[index].stickers}
             ></StickerPack>
           </div>
           {image ? (

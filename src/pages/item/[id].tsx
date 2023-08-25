@@ -1,16 +1,23 @@
 import Header from "components/Header/header";
 import StickerPack, { IPackProps } from "components/StickerPack/stickerPack";
+import { Field, Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import React from "react";
+import { useCreateComment } from "services/createComment";
 import { useGetComments } from "services/getComments";
 import { useGetPublishedItemById } from "services/getPublishedItemById";
 
 const SingleItem = () => {
   const page = "SingleItem";
   const router = useRouter();
+  let userId = 1;
+
   const { id } = router.query;
+  let postId = Number(id);
+  console.log(postId);
   const { data: image } = useGetPublishedItemById(Number(id));
   const { data: comments } = useGetComments(Number(id));
+  const { mutateAsync: createComment } = useCreateComment();
 
   return (
     <div className=" bg-cover bg-fixed bg-background font-kameron h-[100vh] pb-10">
@@ -37,6 +44,32 @@ const SingleItem = () => {
               <p>Username</p>
             </div>
             <h1 className="text-lg">Comments</h1>
+            <Formik
+              initialValues={{
+                text: "",
+                userId: userId,
+                id: postId,
+              }}
+              onSubmit={async (values) => {
+                values.id = postId;
+                console.log(values);
+
+                await createComment(values);
+              }}
+            >
+              <div>
+                <Form>
+                  <Field
+                    as="textarea"
+                    placeholder="Write a comment..."
+                    name="text"
+                    required
+                  ></Field>
+                  <button type="submit">Post it</button>
+                </Form>
+              </div>
+            </Formik>
+
             {comments?.length !== 0 ? (
               comments?.map((comment) => (
                 <div key={comment?.id}>

@@ -5,7 +5,7 @@ interface iTag {
   name: string;
 }
 
-async function createTag(tag: iTag) {
+export async function createTag(tag: iTag) {
   try {
     const res = await Tag.create(tag);
     return res;

@@ -8,34 +8,19 @@ import Masonry from "@mui/lab/Masonry";
 import { queryTypes, useQueryStates } from "next-usequerystate";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useGetPublishedItemsByUserId } from "services/getPublishedItemsByUserId";
 
 const Gallery = () => {
   const router = useRouter();
+  const { id } = router.query;
   const page = "My profile";
-
-  const testValues = [
-    {
-      image: "//picsum.photos/200/200",
-      id: "1",
-    },
-    {
-      image: "//picsum.photos/160/450",
-      id: "2",
-    },
-    {
-      image: "//picsum.photos/450/450",
-      link: "3",
-    },
-    {
-      image: "//picsum.photos/300/700",
-      link: "4",
-    },
-  ];
+  const { data: postValue } = useGetPublishedItemsByUserId(Number(id));
 
   let [searchParams, setSearchParams] = useQueryStates({
     q: queryTypes.string,
     categories: queryTypes.string,
   });
+
   const q = searchParams.q;
   const category = searchParams.categories;
   const [categoryChoice, setCategoryChoice] = React.useState(category || null);
@@ -153,23 +138,25 @@ const Gallery = () => {
 
             <div className="mt-16 w-full flex justify-center">
               <Masonry columns={3} spacing={{ md: 2, lg: 5 }}>
-                {testValues.map((value) => (
-                  <div key={value.id} className="lg:hover:bg-yellow-50 p-3">
-                    <img
-                      className="shadow"
-                      src={value.image}
-                      onClick={() => {
-                        router.push(`/item/${value.id}`);
-                      }}
-                    ></img>
-                    <div className="mt-4  flex justify-between m-0">
-                      <p>Image Name</p>
-                      <button className="px-2  py-0.5 rounded-lg text-sm flex flex-nowrap bg-yellow-100">
-                        ☆ 99
-                      </button>
+                <>
+                  {postValue?.map((value: any) => (
+                    <div key={value.id} className="lg:hover:bg-yellow-50 p-3">
+                      <img
+                        className="shadow"
+                        src={value.imageUrl}
+                        onClick={() => {
+                          router.push(`/item/${value.id}`);
+                        }}
+                      ></img>
+                      <div className="mt-4  flex justify-between m-0">
+                        <p>{value.id}</p>
+                        <button className="px-2  py-0.5 rounded-lg text-sm flex flex-nowrap bg-yellow-100">
+                          ☆ {value.likes}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </>
               </Masonry>
             </div>
           </div>

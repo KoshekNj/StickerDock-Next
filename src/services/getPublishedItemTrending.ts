@@ -15,7 +15,7 @@ interface IPublishedItem {
 
 export const getPublishedItemTrending = async () => {
   return axios
-    .get<IPublishedItem>("/api/publisheditem/trending")
+    .get<IPublishedItem[]>("/api/publisheditem/trending")
     .then((res) => res.data)
     .catch((err) => {
       console.error(err);
@@ -24,9 +24,9 @@ export const getPublishedItemTrending = async () => {
 };
 
 type IPublishedItemFullQueryOptions = UseQueryOptions<
-  IPublishedItem,
+  IPublishedItem[],
   unknown,
-  IPublishedItem,
+  IPublishedItem[],
   string[]
 >;
 

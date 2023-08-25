@@ -16,10 +16,11 @@ import { useGetStickerPackById } from "services/getStickerPackById";
 const Profile = () => {
   const page = "My profile";
   const router = useRouter();
+  const { id } = router.query;
   const Stickers = stickers;
   const { data: user, isLoading } = useGetUserById(1);
 
-  const { data: packValue } = useGetStickerPacksByUserId(1);
+  const { data: packValue } = useGetStickerPacksByUserId(Number(id));
   console.log("pack value", packValue);
 
   let [searchParams, setSearchParams] = useQueryStates({

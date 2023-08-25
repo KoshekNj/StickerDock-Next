@@ -9,13 +9,12 @@ interface IPublishedItem {
   public: boolean;
   userId: number;
   imageId?: number;
-  stickerPackId: number;
   imageUrl: string;
 }
 
-export const getPublishedItemFollow = async (id: number) => {
+export const getPublishedItemsByUserId = async (id: number) => {
   return axios
-    .get<IPublishedItem[]>("/api/publisheditem/follow/" + id)
+    .get<IPublishedItem[]>("/api/publisheditem/user/" + id)
     .then((res) => res.data)
     .catch((err) => {
       console.error(err);
@@ -23,21 +22,21 @@ export const getPublishedItemFollow = async (id: number) => {
     });
 };
 
-type IPublishedItemFullQueryOptions = UseQueryOptions<
+type IPublishedItemsFullQueryOptions = UseQueryOptions<
   IPublishedItem[],
   unknown,
   IPublishedItem[],
   string[]
 >;
 
-const defaultOptions: IPublishedItemFullQueryOptions = {
+const defaultOptions: IPublishedItemsFullQueryOptions = {
   refetchOnWindowFocus: false,
 };
 
-export function useGetPublishedItemFollow(id: number) {
+export function useGetPublishedItemsByUserId(id: number) {
   return useQuery(
-    ["publisheditemfollow", String()],
-    () => getPublishedItemFollow(id),
+    ["userposts", String(id)],
+    () => getPublishedItemsByUserId(id),
     defaultOptions
   );
 }

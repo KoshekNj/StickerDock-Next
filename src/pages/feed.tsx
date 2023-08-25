@@ -19,44 +19,6 @@ const Trending = () => {
 
   const { data: trendingData, isLoading } = useGetPublishedItemTrending();
   const { data: followingData } = useGetPublishedItemFollow(Number(id));
-  const testValues = [
-    [
-      {
-        image: "//picsum.photos/200/200",
-        id: "1",
-      },
-      {
-        image: "//picsum.photos/160/450",
-        id: "2",
-      },
-      {
-        image: "//picsum.photos/450/450",
-        link: "3",
-      },
-      {
-        image: "//picsum.photos/300/700",
-        link: "4",
-      },
-    ],
-    [
-      {
-        image: "//picsum.photos/200/200",
-        id: "1",
-      },
-      {
-        image: "//picsum.photos/160/450",
-        id: "2",
-      },
-      {
-        image: "//picsum.photos/300/700",
-        link: "4",
-      },
-      {
-        image: "//picsum.photos/450/450",
-        link: "3",
-      },
-    ],
-  ];
 
   return (
     <div className=" bg-cover bg-fixed bg-background font-kameron pb-10">
@@ -87,16 +49,22 @@ const Trending = () => {
         {selectedTab === "Trending" && (
           <div className="mt-16 w-[60%]">
             <Masonry columns={3} spacing={5}>
-              {testValues[0].map((value) => (
-                <img
-                  key={trendingData?.id}
-                  className="shadow"
-                  src={trendingData?.imageUrl}
-                  onClick={() => {
-                    router.push(`/item/${value.id}`);
-                  }}
-                ></img>
-              ))}
+              <>
+                {isLoading ? (
+                  <p>...</p>
+                ) : (
+                  trendingData?.map((value) => (
+                    <img
+                      key={value?.id}
+                      className="shadow"
+                      src={value?.imageUrl}
+                      onClick={() => {
+                        router.push(`/item/${value.id}`);
+                      }}
+                    />
+                  ))
+                )}
+              </>
             </Masonry>
           </div>
         )}
@@ -104,16 +72,18 @@ const Trending = () => {
         {selectedTab === "Following" && (
           <div className="mt-16 w-[60%]">
             <Masonry columns={3} spacing={5}>
-              {testValues[1].map((value) => (
-                <img
-                  key={followingData?.id}
-                  className="shadow"
-                  src={followingData?.imageUrl}
-                  onClick={() => {
-                    router.push(`/item/${value.id}`);
-                  }}
-                ></img>
-              ))}
+              <>
+                {followingData?.map((value) => (
+                  <img
+                    key={value?.id}
+                    className="shadow"
+                    src={value?.imageUrl}
+                    onClick={() => {
+                      router.push(`/item/${value.id}`);
+                    }}
+                  ></img>
+                ))}
+              </>
             </Masonry>
           </div>
         )}

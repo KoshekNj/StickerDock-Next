@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { createPublishedItem } from "../publisheditem";
+import { createPublishedItem } from "../publisheditem/index";
 const Image = require("../../../db/models/image");
 
 export interface iImage {

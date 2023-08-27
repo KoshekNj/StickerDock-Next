@@ -12,16 +12,23 @@ import NewStickerPack from "components/StickerPack/newStickerPack";
 import { useGetUserById } from "services/getUserById";
 import { useGetStickerPacksByUserId } from "services/getStickerPacksByUserId";
 import { useGetStickerPackById } from "services/getStickerPackById";
+import { useGetFollowers } from "services/getFollowerById";
+import { useCreateFollow } from "services/createFollow";
+import { useDeleteFollow } from "services/deleteFollow";
 
 const Profile = () => {
   const page = "My profile";
   const router = useRouter();
   const { id } = router.query;
+  const userId = 1;
   const Stickers = stickers;
-  const { data: user, isLoading } = useGetUserById(1);
-
+  const { data: user, isLoading } = useGetUserById(Number(id));
+  const { data: follower, refetch } = useGetFollowers(1, Number(id), {
+    enabled: Boolean(id),
+  });
+  const { mutateAsync: createFollow } = useCreateFollow();
+  const { mutateAsync: deleteFollow } = useDeleteFollow();
   const { data: packValue } = useGetStickerPacksByUserId(Number(id));
-
   let [searchParams, setSearchParams] = useQueryStates({
     q: queryTypes.string,
     categories: queryTypes.string,
@@ -91,11 +98,33 @@ const Profile = () => {
                 )}
               </div>
             </div>
-            <div className="text-red-800 text-sm">
-              <Link href={`/profile/${router.query.id}/settings`}>
-                Settings
-              </Link>
-            </div>
+            {userId === Number(id) ? (
+              <div className="text-red-800 text-sm">
+                <Link href={`/profile/${router.query.id}/settings`}>
+                  Settings
+                </Link>
+              </div>
+            ) : follower ? (
+              <button
+                onClick={() =>
+                  deleteFollow({ userId: userId, followerId: Number(id) }).then(
+                    () => refetch()
+                  )
+                }
+              >
+                Unfollow
+              </button>
+            ) : (
+              <button
+                onClick={() =>
+                  createFollow({ userId: userId, followerId: Number(id) }).then(
+                    () => refetch()
+                  )
+                }
+              >
+                Follow
+              </button>
+            )}
           </div>
           <div className="flex flex-col items-center w-2/3">
             <div className="w-100% flex justify-center">

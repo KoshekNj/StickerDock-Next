@@ -7,16 +7,28 @@ interface iFollower {
   followId: number;
 }
 
-async function getFollowerById(id: number) {
+async function getFollowerById(id: number, followId?: number) {
   try {
-    const follower = await sequelize.query(
-      `SELECT * FROM follower INNER JOIN user ON follower.followId=user.id WHERE follower.userId=:userId `,
-      {
-        replacements: { userId: id },
-        type: sequelize.QueryTypes.SELECT,
-      }
-    );
-    return follower;
+    if (followId) {
+      const isFollowing = await Follower.findOne({
+        where: {
+          userId: id,
+          followId: followId,
+        },
+      });
+
+      return isFollowing;
+    } else {
+      const follower = await sequelize.query(
+        `SELECT * FROM follower INNER JOIN user ON follower.followId=user.id WHERE follower.userId=:userId `,
+        {
+          replacements: { userId: id },
+          type: sequelize.QueryTypes.SELECT,
+        }
+      );
+
+      return follower;
+    }
   } catch (err) {
     return err;
   }
@@ -24,7 +36,8 @@ async function getFollowerById(id: number) {
 
 async function createFollower(userId: number, followId: number) {
   try {
-    const res = await Follower.create(userId, followId);
+    console.log(userId, followId);
+    const res = await Follower.create({ userId, followId });
     return res;
   } catch (error) {
     return error;
@@ -50,18 +63,15 @@ export default async function handler(
   res: NextApiResponse<typeof Follower>
 ) {
   try {
+    const userId = req.query.id;
+    const followId = req.query.followid;
     if (req.method === "POST") {
-      const userId = req.query.userId;
-      const followId = req.query.id;
       const response = await createFollower(userId as any, followId as any);
       return res.status(200).json(response);
     } else if (req.method === "GET") {
-      const userId = req.query.id;
-      const response = await getFollowerById(userId as any);
+      const response = await getFollowerById(userId as any, followId as any);
       return res.status(200).json(response);
     } else if (req.method === "DELETE") {
-      const userId = req.query.userId;
-      const followId = req.query.id;
       const response = await deleteFollower(userId as any, followId as any);
       return res.status(200).json(response);
     }

@@ -74,7 +74,7 @@ export default async function handler(
     } else if (req.method === "PUT") {
       const user = await updateUser(userUpdate, id as any);
       return res.status(200).json(user);
-    } else if (req.method === "DELTE") {
+    } else if (req.method === "DELETE") {
       const user = await deleteUser(id as any);
       return res.status(200).json(user);
     }

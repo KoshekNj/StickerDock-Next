@@ -5,13 +5,17 @@ const sequelize = require("../../../db/config");
 interface iComment {
   publishedItemId: number;
   text: string;
+  userId: number;
 }
 async function getComments(id: number) {
   try {
-    const res = await Comment.findAll({
-      where: { publishedItemId: id },
-      raw: true,
-    });
+    const res = await sequelize.query(
+      `SELECT comment.*, user.username, user.profilePicUrl FROM comment INNER JOIN user ON comment.userId=user.id WHERE comment.publishedItemId=:id`,
+      {
+        replacements: { id: id },
+        type: sequelize.QueryTypes.SELECT,
+      }
+    );
     return res;
   } catch (err) {
     return err;
@@ -21,11 +25,12 @@ async function getComments(id: number) {
 async function createComment(comment: iComment) {
   try {
     const res = await sequelize.query(
-      ` INSERT INTO comment (id, text, date, publishedItemId) VALUES (DEFAULT,$text,DEFAULT,$publishedItemId);`,
+      ` INSERT INTO comment (id, text, date, publishedItemId, userId) VALUES (DEFAULT,$text,DEFAULT,$publishedItemId,$userId);`,
       {
         bind: {
           text: comment.text,
           publishedItemId: comment.publishedItemId,
+          userId: comment.userId,
         },
         type: sequelize.QueryTypes.INSERT,
       }

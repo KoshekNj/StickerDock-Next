@@ -3,6 +3,7 @@ import { deleteImage } from "../image/[id]";
 const PublishedItem = require("../../../db/models/publishedItem");
 const sequelize = require("../../../db/config");
 const Image = require("../../../db/models/image");
+const User = require("../../../db/models/user");
 interface iPublishedItem {
   userId: number;
   imageId: number;
@@ -14,13 +15,13 @@ interface iPublishedItem {
 
 async function getPublishedItemById(id: number) {
   try {
-    const res = await PublishedItem.findOne({
-      include: Image,
-      where: {
-        id: id,
-      },
-      raw: true,
-    });
+    const res = await sequelize.query(
+      `SELECT publisheditem.*, image.*, user.username, user.profilePicUrl FROM publisheditem INNER JOIN image ON image.id=publisheditem.imageId INNER JOIN user ON publisheditem.userId=user.id WHERE publisheditem.id=:id`,
+      {
+        replacements: { id: id },
+        type: sequelize.QueryTypes.SELECT,
+      }
+    );
     return res;
   } catch (err) {
     return err;

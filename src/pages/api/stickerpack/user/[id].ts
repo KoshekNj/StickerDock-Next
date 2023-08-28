@@ -3,6 +3,7 @@ import { getStickerByStickerPackId } from "pages/api/sticker/[id]";
 import { getTagsByPackId } from "pages/api/stickerpacktag/stickerpack/[id]";
 const StickerPack = require("../../../../db/models/stickerPack");
 const sequelize = require("../../../../db/config");
+const { Op } = require("sequelize");
 
 export interface iStickerPackFull {
   id: number;
@@ -11,17 +12,70 @@ export interface iStickerPackFull {
   labelUrl: string;
 }
 
-async function getStickerPackByUserId(id: number) {
+async function getStickerPackByUserId(
+  id: number,
+  name?: string,
+  type?: string
+) {
   try {
-    const stickerPacks = await StickerPack.findAll({
-      attributes: ["id"],
-      where: {
-        userId: id,
-      },
-      raw: true,
-    });
+    if (name !== "undefined") {
+      const stickerPacks = await StickerPack.findAll({
+        attributes: ["id"],
+        where: {
+          userId: id,
+          name: { [Op.like]: `${name}%` },
+        },
+        raw: true,
+      });
+      return stickerPacks;
+    } else if (type === "asc") {
+      const res = await StickerPack.findAll({
+        where: {
+          userId: id,
+        },
+        order: [["name", "ASC"]],
+        raw: true,
+      });
+      return res;
+    } else if (type === "desc") {
+      const res = await StickerPack.findAll({
+        where: {
+          userId: id,
+        },
+        order: [["name", "DESC"]],
+        raw: true,
+      });
 
-    return stickerPacks;
+      return res;
+    } else if (type === "new") {
+      const res = await StickerPack.findAll({
+        where: {
+          userId: id,
+        },
+        order: [["date", "DESC"]],
+        raw: true,
+      });
+
+      return res;
+    } else if (type === "old") {
+      const res = await StickerPack.findAll({
+        where: {
+          userId: id,
+        },
+        order: [["date", "ASC"]],
+        raw: true,
+      });
+      return res;
+    } else {
+      const stickerPacks = await StickerPack.findAll({
+        attributes: ["id"],
+        where: {
+          userId: id,
+        },
+        raw: true,
+      });
+      return stickerPacks;
+    }
   } catch (err) {
     return err;
   }
@@ -33,7 +87,13 @@ export default async function handler(
 ) {
   try {
     const userId = req.query.id;
-    const search = await getStickerPackByUserId(userId as any);
+    const name = req.query.name;
+    const type = req.query.type;
+    const search = await getStickerPackByUserId(
+      userId as any,
+      name as string,
+      type as string
+    );
     res.status(200).json(search);
   } catch (err) {
     res.status(500).json({ error: "failed to load data" });

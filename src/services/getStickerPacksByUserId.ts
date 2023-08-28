@@ -12,9 +12,15 @@ interface IStickerPack {
   tags: [];
 }
 
-export const getStickerPacksByUserId = async (id: number) => {
+export const getStickerPacksByUserId = async (
+  id: number,
+  name?: string,
+  type?: string
+) => {
   return axios
-    .get<IStickerPack[]>("/api/stickerpack/user/" + id)
+    .get<IStickerPack[]>(
+      "/api/stickerpack/user/" + id + "/?name=" + name + "&type=" + type
+    )
     .then(async (res) => {
       let array: any = [];
       for (const stickerPack of res.data) {
@@ -41,10 +47,14 @@ const defaultOptions: IStickerPackFullQueryOptions = {
   refetchOnWindowFocus: false,
 };
 
-export function useGetStickerPacksByUserId(id: number) {
+export function useGetStickerPacksByUserId(
+  id: number,
+  name?: string,
+  type?: string
+) {
   return useQuery(
-    ["packs", String(id)],
-    () => getStickerPacksByUserId(id),
+    ["packs", String(id), String(name), String(type)],
+    () => getStickerPacksByUserId(id, name, type),
     defaultOptions
   );
 }

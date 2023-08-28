@@ -9,48 +9,14 @@ import { queryTypes, useQueryStates } from "next-usequerystate";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useGetPublishedItemsByUserId } from "services/getPublishedItemsByUserId";
+import { useGetUserById } from "services/getUserById";
 
 const Gallery = () => {
   const router = useRouter();
   const { id } = router.query;
   const page = "My profile";
   const { data: postValue } = useGetPublishedItemsByUserId(Number(id));
-
-  let [searchParams, setSearchParams] = useQueryStates({
-    q: queryTypes.string,
-    categories: queryTypes.string,
-  });
-
-  const q = searchParams.q;
-  const category = searchParams.categories;
-  const [categoryChoice, setCategoryChoice] = React.useState(category || null);
-  const [searchTerm, setSearchTerm] = React.useState(q || "");
-
-  const categoriesOptions: any = [
-    { value: "Date made", label: "Date made DESC" },
-    { value: "Date made ASC", label: "Date made ASC" },
-    { value: "Pack name A-Z", label: "Pack name A-Z" },
-    { value: "Pack name Z-A", label: "Pack name Z-A" },
-  ];
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    if (searchTerm) {
-      setSearchParams({ ...searchParams, q: searchTerm });
-    } else {
-      setSearchParams({ ...searchParams, q: null });
-    }
-  };
-
-  const handleCategoryChange = (e: any) => {
-    setCategoryChoice(e.label);
-
-    if (e.label && e.label !== "none") {
-      setSearchParams({ ...searchParams, categories: e.value });
-    } else {
-      setSearchParams({ ...searchParams, categories: null });
-    }
-  };
+  const { data: user, isLoading } = useGetUserById(Number(id));
 
   return (
     <div className=" bg-cover bg-fixed bg-background font-kameron pb-10">
@@ -74,8 +40,8 @@ const Gallery = () => {
                   src={"/images/kermit.png"}
                 ></img>
                 <div>
-                  <p className="font-bold text-md">Username</p>
-                  <p>128 characters description</p>
+                  <p className="font-bold text-md">{user?.username}</p>
+                  <p>{user?.description}</p>
                 </div>
               </div>
             </div>
@@ -86,56 +52,6 @@ const Gallery = () => {
             </div>
           </div>
           <div className="flex flex-col items-center grow">
-            <div className="w-100% flex justify-center">
-              <form
-                method="get"
-                className="md:w-[300px] bg-white border-myYellow mr-9 rounded-md border-2  flex justify-between"
-                onSubmit={handleSubmit}
-              >
-                <input
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  name="q"
-                  className="md:w-[300px] px-3 rounded-md flex-1 text-sm placeholder-gray-500"
-                  placeholder="Search by pack name, tags..."
-                ></input>
-                {searchTerm ? (
-                  <button
-                    type="button"
-                    className="rounded-md"
-                    onClick={() => setSearchTerm("")}
-                  >
-                    <img
-                      className="w-3.5 h-3.5 m-2 opacity-25"
-                      src="/images/Close_round.png"
-                    ></img>
-                  </button>
-                ) : null}
-                <button className="rounded-r-md ">
-                  <img
-                    className="w-4 h-4 m-2 "
-                    src="/images/Search_alt.png"
-                  ></img>
-                </button>
-              </form>
-
-              <form
-                method="get"
-                className="border-myYellow mr-9 rounded-md border-2 flex z-50"
-                name="category"
-              >
-                <Select
-                  className="text-sm min-w-[150px] placeholder-gray-500"
-                  value={categoriesOptions.find(
-                    (option: any) => option.value === categoryChoice
-                  )}
-                  placeholder={!categoryChoice ? "Category" : categoryChoice}
-                  options={categoriesOptions}
-                  onChange={handleCategoryChange}
-                />
-              </form>
-            </div>
-
             <div className="mt-16 w-full flex justify-center">
               <Masonry columns={3} spacing={{ md: 2, lg: 5 }}>
                 <>

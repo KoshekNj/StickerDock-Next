@@ -22,27 +22,31 @@ const Profile = () => {
   const { id } = router.query;
   const userId = 1;
   const Stickers = stickers;
-  const { data: user, isLoading } = useGetUserById(Number(id));
-  const { data: follower, refetch } = useGetFollowers(1, Number(id), {
-    enabled: Boolean(id),
-  });
-  const { mutateAsync: createFollow } = useCreateFollow();
-  const { mutateAsync: deleteFollow } = useDeleteFollow();
-  const { data: packValue } = useGetStickerPacksByUserId(Number(id));
   let [searchParams, setSearchParams] = useQueryStates({
     q: queryTypes.string,
     categories: queryTypes.string,
   });
   const q = searchParams.q;
   const category = searchParams.categories;
-  const [categoryChoice, setCategoryChoice] = React.useState(category || null);
+  const [categoryChoice, setCategoryChoice] = React.useState(category || "");
   const [searchTerm, setSearchTerm] = React.useState(q || "");
+  const { data: user, isLoading } = useGetUserById(Number(id));
+  const { data: follower, refetch } = useGetFollowers(1, Number(id), {
+    enabled: Boolean(id),
+  });
+  const { mutateAsync: createFollow } = useCreateFollow();
+  const { mutateAsync: deleteFollow } = useDeleteFollow();
+  const { data: packValue } = useGetStickerPacksByUserId(
+    Number(id),
+    searchTerm,
+    categoryChoice
+  );
 
   const categoriesOptions: any = [
-    { value: "Date made", label: "Date made DESC" },
-    { value: "Date made ASC", label: "Date made ASC" },
-    { value: "Pack name A-Z", label: "Pack name A-Z" },
-    { value: "Pack name Z-A", label: "Pack name Z-A" },
+    { value: "new", label: "Date made DESC" },
+    { value: "old", label: "Date made ASC" },
+    { value: "asc", label: "Pack name A-Z" },
+    { value: "desc", label: "Pack name Z-A" },
   ];
 
   const handleSubmit = (e: any) => {
@@ -135,7 +139,10 @@ const Profile = () => {
               >
                 <input
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    console.log(searchTerm);
+                  }}
                   name="q"
                   className="md:w-[300px] px-3 rounded-md flex-1 text-sm placeholder-gray-500"
                   placeholder="Search by pack name, tags..."
@@ -172,7 +179,9 @@ const Profile = () => {
                   )}
                   placeholder={!categoryChoice ? "Category" : categoryChoice}
                   options={categoriesOptions}
-                  onChange={handleCategoryChange}
+                  onChange={(option) => {
+                    setCategoryChoice(option.value);
+                  }}
                 />
               </form>
             </div>

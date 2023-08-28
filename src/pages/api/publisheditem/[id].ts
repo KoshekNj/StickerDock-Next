@@ -22,6 +22,22 @@ async function getPublishedItemById(id: number) {
         type: sequelize.QueryTypes.SELECT,
       }
     );
+    return res[0];
+  } catch (err) {
+    return err;
+  }
+}
+
+async function updatePublishedItem(id: number, value: number) {
+  try {
+    const res = await sequelize.query(
+      `UPDATE publisheditem SET publisheditem.likes = likes+ :value WHERE publisheditem.id=:id;`,
+      {
+        replacements: { id: id, value: value },
+
+        type: sequelize.QueryTypes.UPDATE,
+      }
+    );
     return res;
   } catch (err) {
     return err;
@@ -50,13 +66,19 @@ export default async function handler(
   res: NextApiResponse<typeof PublishedItem>
 ) {
   try {
+    const itemId = req.query.id;
     if (req.method === "GET") {
-      const itemId = req.query.id;
       const response = await getPublishedItemById(itemId as any);
       return res.status(200).json(response);
     } else if (req.method === "DELETE") {
-      const itemId = req.query.id;
       const response = await deletePublishedItem(itemId as any);
+      return res.status(200).json(response);
+    } else if (req.method === "PUT") {
+      const value = req.body.value;
+      const response = await updatePublishedItem(
+        itemId as any,
+        value as number
+      );
       return res.status(200).json(response);
     }
   } catch (err) {

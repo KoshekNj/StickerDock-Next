@@ -3,6 +3,7 @@ import { createSticker } from "../sticker";
 import { createPublishedItem } from "../publisheditem";
 import { createTag } from "../tag";
 import { createStickerPackTag } from "../stickerpacktag";
+const { Op } = require("sequelize");
 
 const StickerPack = require("../../../db/models/stickerPack");
 
@@ -35,25 +36,42 @@ export async function createStickerPack(
   }
 }
 
+async function searchStickerPack(name: string) {
+  const res = await StickerPack.findAll({
+    where: {
+      name: { [Op.like]: `${name}%` },
+    },
+  });
+}
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<typeof StickerPack>
 ) {
   try {
-    const data = req.body.payload;
+    if (req.method === "POST") {
+      const data = req.body.payload;
 
-    const stickerPack = {
-      userId: data.userId,
-      labelUrl: data.labelUrl,
-      name: data.name,
-    };
+      const stickerPack = {
+        userId: data.userId,
+        labelUrl: data.labelUrl,
+        name: data.name,
+      };
 
-    const stickers = data.stickers;
+      const stickers = data.stickers;
 
-    const tags = data.tags.split(",");
+      const tags = data.tags.split(",");
 
-    const newStickerPack = await createStickerPack(stickerPack, stickers, tags);
-    res.status(200).json(newStickerPack);
+      const newStickerPack = await createStickerPack(
+        stickerPack,
+        stickers,
+        tags
+      );
+      res.status(200).json(newStickerPack);
+    } else {
+      const name = req.query.name;
+      const data = await searchStickerPack(name as string);
+      res.status(200).json(data);
+    }
   } catch (err) {
     res.status(500).json({ error: "failed to load data" });
   }

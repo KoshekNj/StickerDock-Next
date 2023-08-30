@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { Formik, Field, Form } from "formik";
 import { useLogInUser } from "services/logInUser";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 const LogIn = () => {
   const { mutateAsync: userLogIn } = useLogInUser();
+  const router = useRouter();
   return (
     <div className=" bg-cover bg-fixed bg-background font-kameron h-[100vh]">
       <div className="h-[18vh] md:h-[20vh] lg:h-[40vh] w-full  absolute bg-gradient-to-b from-myYellow"></div>
@@ -24,7 +27,10 @@ const LogIn = () => {
             password: "",
           }}
           onSubmit={async (values) => {
-            userLogIn(values).then((res) => console.log(res));
+            userLogIn(values).then((res) => {
+              localStorage.setItem("id", res);
+              router.push("/");
+            });
           }}
         >
           <Form className="flex flex-col w-1/2 p-4 items-center">
@@ -48,6 +54,10 @@ const LogIn = () => {
             </button>
           </Form>
         </Formik>
+        <p className="text-sm">Dont have an account?</p>
+        <Link className="text-sm hover:underline text-red-800" href="/signup">
+          Click here
+        </Link>
       </div>
     </div>
   );

@@ -20,7 +20,11 @@ const Profile = () => {
   const page = "My profile";
   const router = useRouter();
   const { id } = router.query;
-  const userId = 1;
+  let idUser: string | null = null;
+  if (typeof window !== "undefined") {
+    idUser = localStorage.getItem("id");
+  }
+
   const Stickers = stickers;
   let [searchParams, setSearchParams] = useQueryStates({
     q: queryTypes.string,
@@ -31,13 +35,17 @@ const Profile = () => {
   const [categoryChoice, setCategoryChoice] = React.useState(category || "");
   const [searchTerm, setSearchTerm] = React.useState(q || "");
   const { data: user, isLoading } = useGetUserById(Number(id));
-  const { data: follower, refetch } = useGetFollowers(1, Number(id), {
-    enabled: Boolean(id),
-  });
+  const { data: follower, refetch } = useGetFollowers(
+    Number(idUser),
+    Number(id),
+    {
+      enabled: Boolean(id),
+    }
+  );
   const { mutateAsync: createFollow } = useCreateFollow();
   const { mutateAsync: deleteFollow } = useDeleteFollow();
   const { data: packValue } = useGetStickerPacksByUserId(
-    Number(id),
+    Number(idUser),
     searchTerm,
     categoryChoice
   );
@@ -78,7 +86,7 @@ const Profile = () => {
           <p className="mx-2">/</p>
           <Link
             className=" hover:text-black  text-stone-700"
-            href="/profile/1/gallery"
+            href={`/profile/${id}/gallery`}
           >
             Gallery
           </Link>
@@ -90,7 +98,7 @@ const Profile = () => {
               <div className="flex p-3">
                 <img
                   className="rounded-full w-[40px] h-[40px] mr-4"
-                  src="/images/kermit.png"
+                  src={user?.profilePicUrl}
                 ></img>
                 {isLoading ? (
                   <p>...</p>
@@ -102,18 +110,29 @@ const Profile = () => {
                 )}
               </div>
             </div>
-            {userId === Number(id) ? (
+            {Number(idUser) === Number(id) ? (
               <div className="text-red-800 text-sm">
-                <Link href={`/profile/${router.query.id}/settings`}>
+                <Link
+                  className="block hover:underline"
+                  href={`/profile/${router.query.id}/settings`}
+                >
                   Settings
+                </Link>
+                <Link
+                  className="block hover:underline"
+                  href={`/login`}
+                  onClick={() => localStorage.clear()}
+                >
+                  Log off
                 </Link>
               </div>
             ) : follower ? (
               <button
                 onClick={() =>
-                  deleteFollow({ userId: userId, followerId: Number(id) }).then(
-                    () => refetch()
-                  )
+                  deleteFollow({
+                    userId: Number(idUser),
+                    followerId: Number(id),
+                  }).then(() => refetch())
                 }
               >
                 Unfollow
@@ -121,9 +140,10 @@ const Profile = () => {
             ) : (
               <button
                 onClick={() =>
-                  createFollow({ userId: userId, followerId: Number(id) }).then(
-                    () => refetch()
-                  )
+                  createFollow({
+                    userId: Number(idUser),
+                    followerId: Number(id),
+                  }).then(() => refetch())
                 }
               >
                 Follow
@@ -192,6 +212,7 @@ const Profile = () => {
                 <StickerPack
                   key={i}
                   title={packValue?.name}
+                  labelUrl={packValue?.labelUrl}
                   author={packValue?.userId}
                   tags={packValue?.tags}
                   stickers={packValue?.stickers}

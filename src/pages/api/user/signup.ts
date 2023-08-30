@@ -25,8 +25,7 @@ async function signUpUser(user: iUser) {
       return "User with this email already exists";
     } else {
       const newUser = await createUser(user);
-      console.log(newUser);
-      return newUser;
+      return newUser.id;
     }
   } catch (err) {
     return err;

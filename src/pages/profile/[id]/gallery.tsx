@@ -10,21 +10,38 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useGetPublishedItemsByUserId } from "services/getPublishedItemsByUserId";
 import { useGetUserById } from "services/getUserById";
+import { deleteFollow } from "services/deleteFollow";
+import { createFollow } from "services/createFollow";
+import { useGetFollowers } from "services/getFollowerById";
 
 const Gallery = () => {
   const router = useRouter();
   const { id } = router.query;
   const page = "My profile";
+  let userId: string | null = null;
+  if (typeof window !== "undefined") {
+    userId = localStorage.getItem("id");
+  }
+  const { data: follower, refetch } = useGetFollowers(
+    Number(userId),
+    Number(id),
+    {
+      enabled: Boolean(id),
+    }
+  );
   const { data: postValue } = useGetPublishedItemsByUserId(Number(id));
   const { data: user, isLoading } = useGetUserById(Number(id));
 
   return (
-    <div className=" bg-cover bg-fixed bg-background font-kameron pb-10">
+    <div className=" bg-cover bg-fixed bg-background font-kameron pb-10 h-screen">
       <div className="h-[18vh] md:h-[20vh] lg:h-[40vh] w-full  absolute bg-gradient-to-b from-myYellow"></div>
       <Header page={page}></Header>
       <div className="flex flex-col ml-6 lg:mx-20 relative z-30">
         <div className="mt-8 mb-8 justify-center md:justify-start md:pl-[50%] lg:pl-[57%] text-stone-700  flex items-center hover:text-black">
-          <Link className="hover:text-black  text-stone-700" href="/profile/1">
+          <Link
+            className="hover:text-black  text-stone-700"
+            href={`/profile/${Number(userId)}`}
+          >
             My Collection
           </Link>
           <p className="mx-2">/</p>
@@ -45,36 +62,67 @@ const Gallery = () => {
                 </div>
               </div>
             </div>
-            <div className="text-red-800 text-sm">
-              <Link href={`/profile/${router.query.id}/settings`}>
-                Settings
-              </Link>
-            </div>
+            {Number(userId) === Number(id) ? (
+              <div className="text-red-800 text-sm">
+                <Link
+                  className="block hover:underline"
+                  href={`/profile/${router.query.id}/settings`}
+                >
+                  Settings
+                </Link>
+                <Link
+                  className="block hover:underline"
+                  href={`/login`}
+                  onClick={() => localStorage.clear()}
+                >
+                  Log off
+                </Link>
+              </div>
+            ) : follower ? (
+              <button
+                onClick={() =>
+                  deleteFollow({
+                    userId: Number(userId),
+                    followerId: Number(id),
+                  }).then(() => refetch())
+                }
+              >
+                Unfollow
+              </button>
+            ) : (
+              <button
+                onClick={() =>
+                  createFollow({
+                    userId: Number(userId),
+                    followerId: Number(id),
+                  }).then(() => refetch())
+                }
+              >
+                Follow
+              </button>
+            )}
           </div>
-          <div className="flex flex-col items-center grow">
-            <div className="mt-16 w-full flex justify-center">
-              <Masonry columns={3} spacing={{ md: 2, lg: 5 }}>
-                <>
-                  {postValue?.map((value: any) => (
-                    <div key={value.id} className="lg:hover:bg-yellow-50 p-3">
-                      <img
-                        className="shadow"
-                        src={value.imageUrl}
-                        onClick={() => {
-                          router.push(`/item/${value.id}`);
-                        }}
-                      ></img>
-                      <div className="mt-4  flex justify-between m-0">
-                        <p>{value.id}</p>
-                        <button className="px-2  py-0.5 rounded-lg text-sm flex flex-nowrap bg-yellow-100">
-                          ☆ {value.likes}
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </>
-              </Masonry>
-            </div>
+          <div className="flex flex-wrap w-2/3 gap-4">
+            {postValue?.map((value: any) => (
+              <div
+                key={value.id}
+                className="lg:hover:bg-yellow-50 p-3 max-w-[200px]"
+              >
+                <img
+                  className="shadow"
+                  src={value?.image?.imageUrl}
+                  onClick={() => {
+                    router.push(`/item/${value.id}`);
+                  }}
+                ></img>
+                <div className="mt-4  flex justify-between m-0">
+                  <p>{value.id}</p>
+                  <button className="px-2  py-0.5 rounded-lg text-sm flex flex-nowrap bg-yellow-100">
+                    ☆ {value.likes}
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

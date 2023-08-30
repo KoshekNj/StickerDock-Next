@@ -1,23 +1,30 @@
 import Header from "components/Header/header";
 import StickerPack, { IPackProps } from "components/StickerPack/stickerPack";
 import { Field, Form, Formik } from "formik";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { useCreateComment } from "services/createComment";
 import { useGetComments } from "services/getComments";
 import { useGetPublishedItemById } from "services/getPublishedItemById";
+import { useGetUserById } from "services/getUserById";
 import { useUpdatePublishedItem } from "services/updatePublishedItem";
+import { classNames } from "uploadthing/client";
 
 const SingleItem = () => {
   const page = "SingleItem";
   const router = useRouter();
-  let userId = 1;
+  let userId: string | null = null;
+  if (typeof window !== "undefined") {
+    userId = localStorage.getItem("id");
+  }
 
   const { id } = router.query;
   let postId = Number(id);
-  console.log(postId);
+
   const { data: image, isLoading } = useGetPublishedItemById(Number(id));
   const { data: comments } = useGetComments(Number(id));
+  const { data: user } = useGetUserById(Number(image?.userId));
   const { mutateAsync: createComment } = useCreateComment();
   const { mutateAsync: updatePublishedItem } = useUpdatePublishedItem();
 
@@ -29,14 +36,15 @@ const SingleItem = () => {
         <p>...</p>
       ) : (
         <>
-          <div className="flex justify-evenly px-28 mt-16 ">
-            <img key={image?.id} src={image?.imageUrl}></img>
+          <div className="flex justify-evenly px-28 mt-16  ">
+            <img
+              className="max-w-md"
+              key={image?.id}
+              src={image?.imageUrl}
+            ></img>
 
             <div className="w-1/3 p-3 z-30 relative">
               <div className="flex justify-start my-4">
-                <button className="px-2  mr-3 py-0.5 rounded-lg text-sm bg-myYellow">
-                  Add to your collection
-                </button>
                 <button
                   onClick={() =>
                     updatePublishedItem({ id: Number(id), value: 1 })
@@ -52,7 +60,7 @@ const SingleItem = () => {
                     className="rounded-full w-[40px] h-[40px] mr-4"
                     src="/images/kermit.png"
                   ></img>
-                  <p>Username</p>
+                  <p>{user?.username}</p>
                 </div>
                 <h1 className="text-lg">Comments</h1>
                 <Formik
@@ -65,7 +73,7 @@ const SingleItem = () => {
                     values.id = postId;
                     console.log(values);
 
-                    await createComment(values);
+                    await createComment(values as any);
                   }}
                 >
                   <div>
@@ -76,14 +84,27 @@ const SingleItem = () => {
                         name="text"
                         required
                       ></Field>
-                      <button type="submit">Post it</button>
+                      <button className="mx-2 hover:underline" type="submit">
+                        Post it
+                      </button>
                     </Form>
                   </div>
                 </Formik>
 
                 {comments?.length !== 0 ? (
                   comments?.map((comment) => (
-                    <div key={comment?.id}>
+                    <div key={comment?.id} className="bg-yellow-100 my-3 p-2">
+                      <img
+                        className="rounded-full w-[40px] h-[40px]"
+                        src={comment?.profilePicUrl}
+                      ></img>
+                      <Link
+                        className="font-bold hover:underline"
+                        href={`/profile/${comment?.userId}`}
+                      >
+                        {user?.username}
+                      </Link>
+
                       <p>{comment?.text}</p>
                     </div>
                   ))

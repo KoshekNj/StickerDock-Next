@@ -24,10 +24,14 @@ export default function Edit() {
   const [image, setImage] = React.useState("");
   const [file, setFile] = React.useState<any>("");
   const [index, setIndex] = React.useState(0);
+
   const { mutateAsync: createImage } = useCreateImage();
+  let userId: string | null = null;
+  if (typeof window !== "undefined") {
+    userId = localStorage.getItem("id");
+  }
 
   const imageupload = useUploadThing("imageUploader");
-
   const onDrop = React.useCallback((acceptedFiles: any) => {
     const reader = new FileReader();
     setFile(acceptedFiles[0]);
@@ -45,8 +49,7 @@ export default function Edit() {
     onDragLeave: () => null,
   });
 
-  const { data: packValues } = useGetStickerPacksByUserId(1);
-
+  const { data: packValues } = useGetStickerPacksByUserId(Number(userId));
   function handleDragEnd(event: DragEndEvent) {
     var element = document.getElementById("canvas");
     if (element) {
@@ -94,12 +97,17 @@ export default function Edit() {
                 ⇒
               </button>
             </div>
-            <StickerPack
-              title={packValues?.[index].name}
-              author={packValues?.[index].userId}
-              tags={packValues?.[index].tags}
-              stickers={packValues?.[index].stickers}
-            ></StickerPack>
+            {packValues && packValues.length > 0 ? (
+              <StickerPack
+                labelUrl={packValues?.[index].labelUrl}
+                title={packValues?.[index].name}
+                author={packValues?.[index].userId}
+                tags={packValues?.[index].tags}
+                stickers={packValues?.[index].stickers}
+              ></StickerPack>
+            ) : (
+              <p>You don't have any sticker packs yet...</p>
+            )}
           </div>
           {image ? (
             <>
@@ -118,7 +126,10 @@ export default function Edit() {
                         });
                         imageupload.startUpload([file2]).then((res) => {
                           const imageUrl = res?.[0].url as string;
-                          createImage({ userId: 1, imageUrl: imageUrl });
+                          createImage({
+                            userId: Number(userId),
+                            imageUrl: imageUrl,
+                          });
                         });
                       }
                     );

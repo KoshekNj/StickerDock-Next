@@ -29,7 +29,7 @@ export async function createStickerPack(
       await createStickerPackTag({ stickerPackId: res.id, tagId: newTag.id });
     });
     const item = { userId: stickerPack.userId, stickerPackId: stickerPackId };
-    await createPublishedItem(item);
+
     return res.id;
   } catch (error) {
     return error;

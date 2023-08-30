@@ -4,16 +4,25 @@ export interface IPackProps {
   title?: string;
   author?: any;
   tags?: any;
+  labelUrl: any;
   stickers?: Array<any>;
 }
 
-const StickerPack = ({ title, author, tags, stickers }: IPackProps) => {
+const StickerPack = ({
+  title,
+  author,
+  tags,
+  labelUrl,
+  stickers,
+}: IPackProps) => {
   return (
     <div className="relative w-[165px] font-kameron mr-8">
       <div className=" h-[395px] w-[165px] flex flex-col relative z-30 bg-orange-100 drop-shadow ">
-        <div className="h-[18%] drop-shadow bg-slate-300 flex flex-col justify-center items-center">
+        <div
+          className="h-[18%] drop-shadow bg-slate-300 flex flex-col justify-center items-center bg-cover bg-center"
+          style={{ backgroundImage: `url("${labelUrl}")` }}
+        >
           <p className="w-fit text-sm bold">{title}</p>
-          <p className="w-fit text-sm">created by: {author}</p>
         </div>
         <div className="flex flex-wrap justify-center items-center">
           {stickers?.map((sticker: any) => (

@@ -15,7 +15,7 @@ async function logInUser(email: string, password: string) {
   try {
     const user = await User.findOne({ where: { email: email } });
     if (user.password === password) {
-      return user;
+      return user.id;
     } else {
       return "Not authorized";
     }

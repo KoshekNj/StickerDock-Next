@@ -7,6 +7,11 @@ interface IHeaderProps {
 }
 
 const Header = ({ page }: IHeaderProps) => {
+  let userId: string | null = null;
+  if (typeof window !== "undefined") {
+    userId = localStorage.getItem("id");
+  }
+
   const links = [
     {
       label: "Editor",
@@ -18,7 +23,7 @@ const Header = ({ page }: IHeaderProps) => {
     },
     {
       label: "My profile",
-      link: `/profile/1`,
+      link: `/profile/${userId}`,
     },
   ];
   return (

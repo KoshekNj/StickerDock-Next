@@ -4,25 +4,46 @@ import { userAgent } from "next/server";
 import React from "react";
 import { useDropzone } from "react-dropzone";
 import { useCreateStickerPack } from "services/createStickerPack";
+import { generateComponents } from "@uploadthing/react";
+import { generateReactHelpers } from "@uploadthing/react/hooks";
+import { toBlob } from "html-to-image";
+
+import type { OurFileRouter } from "../db/uploadthing";
+
+export const { UploadButton, UploadDropzone, Uploader } =
+  generateComponents<OurFileRouter>();
+
+const { useUploadThing } = generateReactHelpers();
 
 const Create = () => {
   const page = "My profile";
-  const [image, setImage] = React.useState("");
+  const [image, setImage]: any = React.useState();
+  const [imagePreview, setImagePreview]: any = React.useState();
   const [stickers, setStickers]: any = React.useState([]);
+  const [stickersPreview, setStickersPreview]: any = React.useState([]);
   const { mutateAsync: createStickerPack } = useCreateStickerPack();
+  const imageupload = useUploadThing("imageUploader");
+  let userId;
+  if (typeof window !== "undefined") {
+    userId = localStorage.getItem("id");
+  }
+
   const onDrop = React.useCallback((acceptedFiles: any) => {
     if (acceptedFiles.length === 1) {
       const reader = new FileReader();
+      setImage(acceptedFiles[0]);
       reader.readAsDataURL(acceptedFiles[0]);
       reader.onload = function () {
-        setImage(reader.result as string);
+        setImagePreview(reader.result as string);
       };
     } else {
       for (let i = 0; i < acceptedFiles.length; i++) {
         const reader = new FileReader();
+        setStickers((stickers: any) => [...stickers, acceptedFiles[i]]);
+        console.log(acceptedFiles);
         reader.readAsDataURL(acceptedFiles[i]);
         reader.onload = function () {
-          setStickers((stickers: any) => [...stickers, reader.result]);
+          setStickersPreview((stickers: any) => [...stickers, reader.result]);
         };
       }
     }
@@ -57,12 +78,20 @@ const Create = () => {
             labelUrl: "",
             stickers: [] as string[],
             tags: [],
-            userId: 1,
+            userId: userId,
           }}
           onSubmit={(value) => {
-            value.labelUrl = "hehe.jpg"; //image
-            value.stickers = ["f.jpg", "j.jpg"]; //stickers
-            createStickerPack(value);
+            imageupload.startUpload([image]).then(async (res) => {
+              const imageUrl = res?.[0].url as string;
+              value.labelUrl = imageUrl;
+              for (const sticker of stickers) {
+                await imageupload.startUpload([sticker]).then((res) => {
+                  value.stickers = [...value.stickers, res?.[0].url as string];
+                });
+              }
+
+              value.userId && createStickerPack(value as any);
+            });
           }}
         >
           <Form className="flex flex-col items-center w-1/2 p-3 z-30">
@@ -148,14 +177,14 @@ const Create = () => {
 
         <div className="w-1/2 p-4">
           <p className="text-lg">Previews:</p>
-          {image ? (
-            <img src={image} className="w-1/2 m-3"></img>
+          {imagePreview ? (
+            <img src={imagePreview} className="w-1/2 m-3"></img>
           ) : (
             <p>No pictures chosen for preview yet</p>
           )}
           <div className="flex flex-wrap">
-            {stickers ? (
-              stickers.map((sticker: string) => (
+            {stickersPreview ? (
+              stickersPreview.map((sticker: string) => (
                 <img src={sticker} key={sticker} className="w-[45px] m-3" />
               ))
             ) : (

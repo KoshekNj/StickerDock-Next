@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Formik, Field, Form } from "formik";
 import { useSignUpUser } from "services/signUpUser";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const SignUp = () => {
   const { mutateAsync: userSignUp } = useSignUpUser();
@@ -35,7 +36,10 @@ const SignUp = () => {
                 email: values.email,
                 password: values.password,
                 username: values.username,
-              }).then((res) => router.push("/"));
+              }).then((res) => {
+                localStorage.setItem("id", res);
+                router.push("/");
+              });
           }}
         >
           <Form className="flex flex-col w-1/2 p-4 items-center">
@@ -71,6 +75,10 @@ const SignUp = () => {
             </button>
           </Form>
         </Formik>
+        <p className="text-sm">Already have an account?</p>
+        <Link className="text-sm hover:underline text-red-800" href="/login">
+          Click here
+        </Link>
       </div>
     </div>
   );

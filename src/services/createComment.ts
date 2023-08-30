@@ -5,6 +5,9 @@ interface iComment {
   id: number;
   userId: number;
   text: string;
+  publishedItemId: number;
+  username: string;
+  profilePicUrl: string;
 }
 
 export const createComment = async (payload: iComment) => {

@@ -81,10 +81,7 @@ const Gallery = () => {
             ) : follower ? (
               <button
                 onClick={() =>
-                  deleteFollow({
-                    userId: Number(userId),
-                    followerId: Number(id),
-                  }).then(() => refetch())
+                  deleteFollow(Number(userId), Number(id)).then(() => refetch())
                 }
               >
                 Unfollow
@@ -92,10 +89,7 @@ const Gallery = () => {
             ) : (
               <button
                 onClick={() =>
-                  createFollow({
-                    userId: Number(userId),
-                    followerId: Number(id),
-                  }).then(() => refetch())
+                  createFollow(Number(userId), Number(id)).then(() => refetch())
                 }
               >
                 Follow

@@ -106,7 +106,7 @@ export default function Edit() {
                 stickers={packValues?.[index].stickers}
               ></StickerPack>
             ) : (
-              <p>You don't have any sticker packs yet...</p>
+              <p>You do not have any sticker packs yet...</p>
             )}
           </div>
           {image ? (

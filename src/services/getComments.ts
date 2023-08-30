@@ -4,9 +4,12 @@ import axios from "axios";
 
 interface IComments {
   id: number;
+  userId: number;
   publisheditemid: number;
   text: string;
   date: string;
+  profilePicUrl: string;
+  username: string;
 }
 
 export const getComments = async (id: number) => {

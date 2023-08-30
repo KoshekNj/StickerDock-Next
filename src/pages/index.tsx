@@ -4,23 +4,33 @@ import React from "react";
 import Header from "components/Header/header";
 import StickerPack, { IPackProps } from "components/StickerPack/stickerPack";
 import { useDropzone } from "react-dropzone";
-import stickers from "../../public/stickers/index";
-import { Sticker } from "components/Sticker/sticker";
 import { Canvas, IStickerWithPosition } from "components/Sticker/Canvas/canvas";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { useCreateImage } from "services/createImage";
-import { useGetStickerPackById } from "services/getStickerPackById";
 import { useGetStickerPacksByUserId } from "services/getStickerPacksByUserId";
-//import handler from "./api/stickerpack";
+import { generateComponents } from "@uploadthing/react";
+import { generateReactHelpers } from "@uploadthing/react/hooks";
+import { toBlob } from "html-to-image";
+
+import type { OurFileRouter } from "../db/uploadthing";
+
+export const { UploadButton, UploadDropzone, Uploader } =
+  generateComponents<OurFileRouter>();
+
+const { useUploadThing } = generateReactHelpers();
 
 export default function Edit() {
   const page = "Editor";
   const [image, setImage] = React.useState("");
-  //const [stickerPackid, setStickerPackId] = React.useState(0);
+  const [file, setFile] = React.useState<any>("");
   const [index, setIndex] = React.useState(0);
   const { mutateAsync: createImage } = useCreateImage();
+
+  const imageupload = useUploadThing("imageUploader");
+
   const onDrop = React.useCallback((acceptedFiles: any) => {
     const reader = new FileReader();
+    setFile(acceptedFiles[0]);
     reader.readAsDataURL(acceptedFiles[0]);
     reader.onload = function () {
       setImage(reader.result as any);
@@ -36,12 +46,8 @@ export default function Edit() {
   });
 
   const { data: packValues } = useGetStickerPacksByUserId(1);
-  //if (packIds) setStickerPackId(Number(packIds[0].id));
 
   function handleDragEnd(event: DragEndEvent) {
-    console.log((event.activatorEvent as any).clientX);
-    console.log(event.delta);
-
     var element = document.getElementById("canvas");
     if (element) {
       var topPos = element.getBoundingClientRect().top;
@@ -60,7 +66,7 @@ export default function Edit() {
   const [canvasStickers, setCanvasStickers] = React.useState<
     IStickerWithPosition[]
   >([]);
-  //console.log(canvasStickers);
+
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <div className=" bg-cover min-h-screen flex flex-col bg-fixed bg-background font-kameron pb-10">
@@ -103,9 +109,20 @@ export default function Edit() {
               <div>
                 <button onClick={() => setCanvasStickers([])}>Reset</button>
                 <button
-                  onClick={() =>
-                    createImage({ userId: 1, imageUrl: "hehe.jpg" })
-                  }
+                  onClick={() => {
+                    toBlob(document.getElementById("canvas") as any).then(
+                      (blob) => {
+                        let file2 = new File([blob as Blob], "file_name.png", {
+                          lastModified: 1534584790000,
+                          type: "image/png",
+                        });
+                        imageupload.startUpload([file2]).then((res) => {
+                          const imageUrl = res?.[0].url as string;
+                          createImage({ userId: 1, imageUrl: imageUrl });
+                        });
+                      }
+                    );
+                  }}
                 >
                   Save
                 </button>

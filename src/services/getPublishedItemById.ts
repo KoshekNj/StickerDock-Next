@@ -12,6 +12,8 @@ interface IPublishedItem {
   public: boolean;
   "image.id": number;
   imageUrl: string;
+  username: string;
+  profilePicUrl: string;
 }
 
 export const getPublishedItemById = async (id: number) => {

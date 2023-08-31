@@ -36,7 +36,7 @@ const SingleItem = () => {
         <p>...</p>
       ) : (
         <>
-          <div className="flex justify-evenly px-28 mt-16  ">
+          <div className="flex justify-evenly px-28 mt-16 items-start ">
             <img
               className="max-w-md"
               key={image?.id}
@@ -55,12 +55,17 @@ const SingleItem = () => {
                 </button>
               </div>
               <div>
-                <div className="flex bg-yellow-100 px-3 py-2 items-center  mb-4">
+                <div className="flex bg-yellow-100 px-3 py-2 items-center mb-4">
                   <img
                     className="rounded-full w-[40px] h-[40px] mr-4"
-                    src="/images/kermit.png"
+                    src={image?.profilePicUrl}
                   ></img>
-                  <p>{user?.username}</p>
+                  <Link
+                    className="font-bold hover:underline"
+                    href={`/profile/${image?.userId}`}
+                  >
+                    {user?.username}
+                  </Link>
                 </div>
                 <h1 className="text-lg">Comments</h1>
                 <Formik

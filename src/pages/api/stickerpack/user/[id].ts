@@ -18,7 +18,7 @@ async function getStickerPackByUserId(
   type?: string
 ) {
   try {
-    if (name !== "undefined") {
+    if (name !== "") {
       const stickerPacks = await StickerPack.findAll({
         attributes: ["id"],
         where: {
@@ -28,13 +28,13 @@ async function getStickerPackByUserId(
         raw: true,
       });
       return stickerPacks;
-    } else if (type === "asc") {
+    } else if (type == "asc") {
+      console.log("asc");
       const res = await StickerPack.findAll({
         where: {
           userId: id,
         },
         order: [["name", "ASC"]],
-        raw: true,
       });
       return res;
     } else if (type === "desc") {
@@ -43,7 +43,6 @@ async function getStickerPackByUserId(
           userId: id,
         },
         order: [["name", "DESC"]],
-        raw: true,
       });
 
       return res;
@@ -53,7 +52,6 @@ async function getStickerPackByUserId(
           userId: id,
         },
         order: [["date", "DESC"]],
-        raw: true,
       });
 
       return res;
@@ -63,7 +61,6 @@ async function getStickerPackByUserId(
           userId: id,
         },
         order: [["date", "ASC"]],
-        raw: true,
       });
       return res;
     } else {

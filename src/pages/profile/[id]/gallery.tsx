@@ -54,7 +54,7 @@ const Gallery = () => {
               <div className="flex p-3">
                 <img
                   className="rounded-full w-[40px] h-[40px] mr-4"
-                  src={"/images/kermit.png"}
+                  src={user?.profilePicUrl}
                 ></img>
                 <div>
                   <p className="font-bold text-md">{user?.username}</p>

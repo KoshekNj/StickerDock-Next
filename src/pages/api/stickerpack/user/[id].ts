@@ -18,7 +18,7 @@ async function getStickerPackByUserId(
   type?: string
 ) {
   try {
-    if (name !== "") {
+    if (name !== "" && name !== undefined) {
       const stickerPacks = await StickerPack.findAll({
         attributes: ["id"],
         where: {

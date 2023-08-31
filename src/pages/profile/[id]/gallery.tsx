@@ -110,7 +110,6 @@ const Gallery = () => {
                   }}
                 ></img>
                 <div className="mt-4  flex justify-between m-0">
-                  <p>{value.id}</p>
                   <button className="px-2  py-0.5 rounded-lg text-sm flex flex-nowrap bg-yellow-100">
                     ☆ {value.likes}
                   </button>

@@ -32,6 +32,7 @@ export default function Edit() {
   }
 
   const imageupload = useUploadThing("imageUploader");
+
   const onDrop = React.useCallback((acceptedFiles: any) => {
     const reader = new FileReader();
     setFile(acceptedFiles[0]);
@@ -49,7 +50,11 @@ export default function Edit() {
     onDragLeave: () => null,
   });
 
-  const { data: packValues } = useGetStickerPacksByUserId(Number(userId));
+  const { data: packValues } = useGetStickerPacksByUserId(
+    Number(userId),
+    "",
+    ""
+  );
   function handleDragEnd(event: DragEndEvent) {
     var element = document.getElementById("canvas");
     if (element) {

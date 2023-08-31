@@ -45,7 +45,7 @@ const Profile = () => {
   const { mutateAsync: createFollow } = useCreateFollow();
   const { mutateAsync: deleteFollow } = useDeleteFollow();
   const { data: packValue } = useGetStickerPacksByUserId(
-    Number(idUser),
+    Number(id),
     searchTerm,
     categoryChoice
   );

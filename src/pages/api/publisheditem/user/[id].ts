@@ -8,6 +8,7 @@ async function getPublishedItemsByUserId(id: number) {
     const res = await PublishedItem.findAll({
       include: Image,
       where: { userId: id },
+      order: [["date", "DESC"]],
     });
     return res;
   } catch (err) {

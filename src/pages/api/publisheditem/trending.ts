@@ -5,7 +5,7 @@ const sequelize = require("../../../db/config");
 async function getPublishedItemTrending() {
   try {
     const res = await sequelize.query(
-      `SELECT publisheditem.id, publisheditem.likes, image.imageUrl, user.username, user.profilePicUrl FROM publisheditem INNER JOIN image ON publisheditem.imageId=image.id INNER JOIN user ON publisheditem.userId=user.id WHERE DATEDIFF(publisheditem.date, now())<7 ORDER BY publisheditem.likes DESC LIMIT 10 `,
+      `SELECT publisheditem.id, publisheditem.likes, image.imageUrl, user.username, user.id AS userId, user.profilePicUrl FROM publisheditem INNER JOIN image ON publisheditem.imageId=image.id INNER JOIN user ON publisheditem.userId=user.id WHERE DATEDIFF(publisheditem.date, now())<7 ORDER BY publisheditem.likes DESC LIMIT 10 `,
       {
         type: sequelize.QueryTypes.SELECT,
       }

@@ -16,7 +16,7 @@ interface iPublishedItem {
 async function getPublishedItemById(id: number) {
   try {
     const res = await sequelize.query(
-      `SELECT publisheditem.id, publisheditem.likes, image.imageUrl, user.username, user.profilePicUrl FROM publisheditem INNER JOIN image ON image.id=publisheditem.imageId INNER JOIN user ON publisheditem.userId=user.id WHERE publisheditem.id=:id`,
+      `SELECT publisheditem.id, publisheditem.likes, image.imageUrl, user.username, user.id AS userId, user.profilePicUrl FROM publisheditem INNER JOIN image ON image.id=publisheditem.imageId INNER JOIN user ON publisheditem.userId=user.id WHERE publisheditem.id=:id`,
       {
         replacements: { id: id },
         type: sequelize.QueryTypes.SELECT,

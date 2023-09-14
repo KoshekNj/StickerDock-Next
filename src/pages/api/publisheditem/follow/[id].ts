@@ -5,7 +5,7 @@ const sequelize = require("../../../../db/config");
 async function getPublishedItemFollow(id: number) {
   try {
     const res = await sequelize.query(
-      `SELECT publisheditem.*, follower.*, user.profilePicUrl,user.username, image.* FROM publisheditem INNER JOIN follower ON publisheditem.userId=follower.followId INNER JOIN user ON user.id=follower.followId INNER JOIN image ON publisheditem.imageId=image.id WHERE follower.userId=:userId ORDER BY publisheditem.date DESC LIMIT 50; `,
+      `SELECT publisheditem.id, publisheditem.likes, follower.*, user.profilePicUrl,user.username, image.imageUrl FROM publisheditem INNER JOIN follower ON publisheditem.userId=follower.followId INNER JOIN user ON user.id=follower.followId INNER JOIN image ON publisheditem.imageId=image.id WHERE follower.userId=:userId ORDER BY publisheditem.date DESC LIMIT 50; `,
       {
         replacements: { userId: id },
         type: sequelize.QueryTypes.SELECT,

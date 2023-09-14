@@ -64,7 +64,7 @@ const SingleItem = () => {
                     className="font-bold hover:underline"
                     href={`/profile/${image?.userId}`}
                   >
-                    {user?.username}
+                    {image?.username}
                   </Link>
                 </div>
                 <h1 className="text-lg">Comments</h1>
@@ -107,7 +107,7 @@ const SingleItem = () => {
                         className="font-bold hover:underline"
                         href={`/profile/${comment?.userId}`}
                       >
-                        {user?.username}
+                        {comment?.username}
                       </Link>
 
                       <p>{comment?.text}</p>

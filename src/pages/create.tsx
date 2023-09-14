@@ -185,7 +185,7 @@ const Create = () => {
           <div className="flex flex-wrap items-start">
             {stickersPreview ? (
               stickersPreview.map((sticker: string) => (
-                <img src={sticker} key={sticker} className="w-[45px] m-3" />
+                <img src={sticker} key={sticker} className="w-[55px] m-3" />
               ))
             ) : (
               <></>
